@@ -72,9 +72,9 @@ Route::get('/searchvideo', function()
 
 Route::get('/search','searchController@getcoor');
 //tete test//
-Route::get('/youtube', function()
+Route::get('/tetetete', function()
 {
-    return View::make('youtubetest');
+    return View::make('TETEvdophptest');
 });
 
 Route::get('/tetevdo','tetevdoController@getyoutube');
@@ -88,5 +88,10 @@ Route::get('/maproute', function()
     return View::make('latlngNSC');
 });
 
-Route::get('testyoutube','testyoutubeController@geteiei');
+Route::get('testyoutube','testyoutubeController@getindexweb');
 Route::get('/testimage','testyoutubeController@gettestimage');
+//Route::get('/test','testyoutubeController@geteiei');
+//Route::get('testt','testyoutubeController@getindexweb');
+
+
+//Route::get('testupload','testyoutubeController@gettestupload');

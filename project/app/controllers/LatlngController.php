@@ -94,10 +94,10 @@ class LatlngController extends BaseController
             $addPic->latlng = str_replace(' ','',$array[$i]);//beacz have space to replace
             $addPic->heading= $arrayh[$i];
 
-            $image ='https://maps.googleapis.com/maps/api/streetview?size=600x600&location='.$addPic->latlng.'&heading='.$addPic->heading.'&pitch=-0.76';
+            $image ='https://maps.googleapis.com/maps/api/streetview?size=600x600&location='.$addPic->latlng.'&heading='.$addPic->heading.'&key=AIzaSyDbRxjnjKyaZ664VL-N8U1ybB8yzt8e4oY&pitch=-0.76';
             $img = 'assets/'.$objstart.'to'.$objend.$i.'.jpg';
             //$img = 'assets/'.$addPic->latlng.'A'.$addPic->heading.'.png';
-
+            var_dump($image);
             /**try to check aready have pic in DB and get pic from picDB to make VDO(SEARCH in pic DB)  **/
             $pic = new search;
             $searchPic = $pic->searchNamePic($image);
@@ -163,16 +163,14 @@ class LatlngController extends BaseController
                   if true let it make video
                   if notTrue let it make new group and then let it make vdo
                   **/
-                  if ((!strcmp($strFirstLatlng,$searchGGPicFirst))&&(!strcmp($strLastLatlng,$searchGGPicLast))){
-                    var_dump("it aready have GROUP in DB");
-
+                  if ((strcmp($strFirstLatlng,$searchGGPicFirst))&&(strcmp($strLastLatlng,$searchGGPicLast))){
+                   // var_dump("it aready have GROUP in DB");
+                    var_dump("IT not true THEN SAVE new group in DB ");
+                    $grouppic->save();
 
                   }
           
-                  else{
-                    var_dump("IT not true THEN SAVE new group in DB ");
-                    $grouppic->save();
-                  }
+                  
 
               $groupArrLatlng='';
               $groupArrHead='';
@@ -183,7 +181,7 @@ class LatlngController extends BaseController
 
 
             /************************************************/
-            /** make image process Here    saveto new DB   **/
+            /** make image process                            Here    saveto new DB   **/
             /***************************************************/
 
 
@@ -194,17 +192,15 @@ class LatlngController extends BaseController
             chdir('assets');
             for( $j=0 ; $j<=$ll-1 ; $j++ ){
                 if($j%$groupPoint==0){
-                      shell_exec ("ffmpeg -r 1 -f image2 -start_number ".$j." -i ".$objstart."to".$objend."%d.jpg -vframes ".$groupPoint." group".$objstart."and".$j."pic.avi");
-
+                      shell_exec ("ffmpeg -r 1 -f image2 -start_number ".$j." -i ".$objstart."to".$objend."%d.jpg -vframes ".$groupPoint." group".$objstart."to".$objend."and".$j."pic.avi");
+                        $sublink = new SubLinkVDOEloquent();
+                        $sublink->start = $objstart;
+                        $sublink->end = $objend;
+                        $sublink->linkVDO = "group".$objstart."to".$objend."and".$j."pic.avi";
+                        $sublink->latlngStart = "firstpointofG";
+                        $sublink->latlngEnd = "lastpointofG";
+                        $sublink->save();
                 }
-
-
-            
-
-            $sublink = new SubLinkVDOEloquent();
-            $sublink->start = $objstart;
-            $sublink->end = $objend;
-            $sublink->linkVDO = "group".$objstart."to".$objend."and".$j."pic.avi";
 
             $inforeiei = 10;
             $insecforeiei = ($ll-1)%10;//8-9
@@ -249,15 +245,16 @@ class LatlngController extends BaseController
                    }
                    else{
                     
-                        $sRParrTEN=str_replace(' ','',$array[$l+3]);
+                        $sRParrTEN=str_replace(' ','',$array[$l+$insecforeiei]);
                         $lastpointofG=$lastGpoint->searchGroupPicLast($sRParrTEN);
                         $lastpointofG= implode($lastpointofG);
                         $sublink->latlngEnd = $lastpointofG;
                        // var_dump("------".$i."-----------".$lastpointofG."---ANOTHER GROUP------------");
                     }
                 
+
             /**CHK DBlatlng-DBgrouppic       -----    get firstPointOfGroup and lastPointOfGroup ---->then get **/
-            if ((($strARRlatlng==$firstpointofG)&&(($tete=str_replace(' ','',$array[$l+3]))==$lastpointofG))||($l==$startpoint)){
+            if ((($strARRlatlng==$firstpointofG)&&(($tete=str_replace(' ','',$array[$l+$insecforeiei]))==$lastpointofG))||($l==$startpoint)){
 
                   $sslatlng = new search;
                   $findlatlngpic = $sslatlng->searchlatlngfromGroupPic($firstpointofG,$lastpointofG);
@@ -310,7 +307,7 @@ class LatlngController extends BaseController
 
             }/**END for $l = 0; $l<=$startpoint; $l++**/
       
-}
+        }
             
            
     }

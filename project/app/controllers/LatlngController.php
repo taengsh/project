@@ -27,18 +27,20 @@ class LatlngController extends BaseController
           $addLatlng ->coordinate    = Input::get('member');
           //not have path in DB---> save
           if (!strcmp($namelatlng,$nameStEn)){
-                var_dump("GO To find VDO");
+             //   var_dump("GO To find VDO");
 
             $sublinkvdoindb = new search;
             $searchvdo = $sublinkvdoindb->searchsubvdoByStEn($objstart,$objend);
           
-            var_dump("LINK-----------".$searchvdo);
+           // var_dump("LINK-----------".$searchvdo);
 
           }
 
           else {
 
             $addLatlng->save();
+
+            /**find grouppic ==**/
 
           }
 
@@ -76,7 +78,6 @@ class LatlngController extends BaseController
 
            /**forloop-----get data from DBlatlng ----> data to DBpic  ------->data to DBgrouppic**/ 
           for($i = 0; $i<$ll-1; $i++){
-
               $arrayh[$i]= $arrayh[$i+1]; //NULL at first heading must move 
                   if($i==0){
                           $array[$i]= substr($array[$i],1);
@@ -97,7 +98,7 @@ class LatlngController extends BaseController
             $image ='https://maps.googleapis.com/maps/api/streetview?size=600x600&location='.$addPic->latlng.'&heading='.$addPic->heading.'&key=AIzaSyDbRxjnjKyaZ664VL-N8U1ybB8yzt8e4oY&pitch=-0.76';
             $img = 'assets/'.$objstart.'to'.$objend.$i.'.jpg';
             //$img = 'assets/'.$addPic->latlng.'A'.$addPic->heading.'.png';
-            var_dump($image);
+          
             /**try to check aready have pic in DB and get pic from picDB to make VDO(SEARCH in pic DB)  **/
             $pic = new search;
             $searchPic = $pic->searchNamePic($image);
@@ -106,7 +107,7 @@ class LatlngController extends BaseController
               plese change Algorithm compare latlng,heading of latlngDB and picDB**/
         
             if (strcmp($image,$searchPic)){
-                
+                 // var_dump($img);
              
                 file_put_contents($img,file_get_contents($image));
                 $addPic->namelink = $image;
@@ -186,128 +187,43 @@ class LatlngController extends BaseController
 
 
           /*******************************************************/
-          /**           Start PROCESS MAKE VDO                  **/
+          /**           Start PROCESS MAKE VDO                 **/
+          /**find latlngstart latlngend get link old vdo**/
           /*******************************************************/
-            $groupPoint=10;
+
+            $strPictureTen="";
+            $groupPoint=10;//number of pic in VDO
             chdir('assets');
-            for( $j=0 ; $j<=$ll-1 ; $j++ ){
+            for( $j=0 ; $j<$ll-1 ; $j++ ){
+            
+            $latlngfind = str_replace(' ','',$array[$j]);//beacz have space to replace
+            $headfind= $arrayh[$j];
+            $StrPic = new search;
+            $SetOfStrPic = $StrPic->searchpathpicfrompicdb($latlngfind,$headfind);
+            $strPictureTen .= $SetOfStrPic.',';//str with commar ten point
+            //str with commar split to array
+            //var_dump($j);
+            //var_dump($latlngfind);
+            
+            
+
                 if($j%$groupPoint==0){
-                      shell_exec ("ffmpeg -r 1 -f image2 -start_number ".$j." -i ".$objstart."to".$objend."%d.jpg -vframes ".$groupPoint." group".$objstart."to".$objend."and".$j."pic.avi");
-                        $sublink = new SubLinkVDOEloquent();
-                        $sublink->start = $objstart;
-                        $sublink->end = $objend;
-                        $sublink->linkVDO = "group".$objstart."to".$objend."and".$j."pic.avi";
-                        $sublink->latlngStart = "firstpointofG";
-                        $sublink->latlngEnd = "lastpointofG";
-                        $sublink->save();
+             var_dump($strPictureTen);
+                //shell_exec ("ffmpeg -r 1 -f image2 -start_number ".$j." -i ".$objstart."to".$objend."%d.jpg -vframes ".$groupPoint." group".$objstart."to".$objend."and".$j."pic.avi");
+                 $sublink = new SubLinkVDOEloquent();
+                     $sublink->start = $objstart;
+                     $sublink->end = $objend;
+                     $sublink->linkVDO = "group".$objstart."to".$objend."and".$j."pic.avi";
+                     $sublink->latlngStart = "firstpointofG";
+                     $sublink->latlngEnd = "lastpointofG";
+                     $strPictureTen='';
+                    // $sublink->save();
                 }
 
-            $inforeiei = 10;
-            $insecforeiei = ($ll-1)%10;//8-9
-            $startpoint = ($ll-1)-$insecforeiei;//90
-            $endpointlastgroup = ($ll-2);
-
-            for($l = 0; $l<=$startpoint; $l++){
-
-                $arrayh[$l]= $arrayh[$l+1]; //NULL at first heading must move 
-                  
-
-                  if ($l==$ll-1) {
-                          $array[$l]= trim($array[$l],")"); 
-                          //var_dump($array[$i]);
-                  } 
-                    /**make array to string*/
-                   //$ArrtoStrsearchF = implode($array[$i]);
-                   // $ArrtoStrsearchFinlastG = implode($array[$startpoint]);
-
-                $firstGpoint = new search;
-                $strARRlatlng=str_replace(' ','',$array[$l]);
-                $firstpointofG=$firstGpoint->searchGroupPicFirst($strARRlatlng);
-                $firstpointofG= implode($firstpointofG);
-                
-               /**MAKE VDO **/
-                $sublink->latlngStart = $firstpointofG;
-
-                 /**this if prevent undefined offset in last group**/ 
-                $lastGpoint = new search;
-
-                    if($l==$startpoint){
-                   
-                      $srrReplaceinsecforeiei=str_replace(' ','',$array[($insecforeiei+$startpoint)-1]);
-                      $lastpointofG=$lastGpoint->searchGroupPicLast($srrReplaceinsecforeiei);
-
-                      $lastpointofG= implode($lastpointofG);
-                      $sublink->latlngEnd = $lastpointofG;
-
-                    //  var_dump($lastpointofG);
-                    //  var_dump("last POINT last GROUP-----------"); 
-
-                   }
-                   else{
-                    
-                        $sRParrTEN=str_replace(' ','',$array[$l+$insecforeiei]);
-                        $lastpointofG=$lastGpoint->searchGroupPicLast($sRParrTEN);
-                        $lastpointofG= implode($lastpointofG);
-                        $sublink->latlngEnd = $lastpointofG;
-                       // var_dump("------".$i."-----------".$lastpointofG."---ANOTHER GROUP------------");
-                    }
-                
-
-            /**CHK DBlatlng-DBgrouppic       -----    get firstPointOfGroup and lastPointOfGroup ---->then get **/
-            if ((($strARRlatlng==$firstpointofG)&&(($tete=str_replace(' ','',$array[$l+$insecforeiei]))==$lastpointofG))||($l==$startpoint)){
-
-                  $sslatlng = new search;
-                  $findlatlngpic = $sslatlng->searchlatlngfromGroupPic($firstpointofG,$lastpointofG);
-
-                  $ssheading = new search;
-                  $findheadpic = $ssheading->searchheadingfromGroupPic($firstpointofG,$lastpointofG);
-
-
-                 // var_dump($l."--------------FIRST".$firstpointofG);
-                 // var_dump("--------------LAST".$lastpointofG."/////////////");
-                  
-                    /**From search get ARR make it to string then substring**/
-                    /**Heading split **/
-                  $Gheadarrayh = implode(" ",$findheadpic);
-                  $Gheadarrayh = explode(')(', $Gheadarrayh);
-                  $llHAA = count($Gheadarrayh);  //10
-                    /**latlng split **/
-                  $Glatlngarray = implode(" ",$findlatlngpic);
-                  $Glatlngarray = explode(')(', $Glatlngarray);
-
-                  $llAA = count($Glatlngarray); //10
-
-                
-
-              
-                  for($k=0;$k<=$llAA-1;$k++){
-                        if($k==0){
-                          $Glatlngarray[$k]= substr($Glatlngarray[$k],1);
-                          $Gheadarrayh[$k]= substr($Gheadarrayh[$k],1);
-                         //var_dump($Glatlngarray[$i]);
-                        }
-                        if (($k%10)==$llAA-1) {
-                          $Glatlngarray[$k]= trim($Glatlngarray[$k],")");
-                          $Gheadarrayh[$k]= trim($Gheadarrayh[$k],")"); 
-                         // var_dump($llAA-1);
-                        }
-
-                        $sspicmakevdo = new search;
-                        $namepicture = $sspicmakevdo->searchpathpicfrompicdb($Glatlngarray[$k],$Gheadarrayh[$k]);
-                   //var_dump($Glatlngarray[$k]);
-                   // var_dump($Gheadarrayh[$k]) ;
-
-                 //  var_dump("-------ROUND-".$k."-------".$namepicture);
-
-                  }//end for mak group vdo
-                    
-                    
-               }///**END CHK DBlatlng-DBgrouppic       -----    get firstPointOfGroup and lastPointOfGroup ---->then get **/
-           
-
-            }/**END for $l = 0; $l<=$startpoint; $l++**/
       
-        }
+        }//end make VDO   for( $j=0 ; $j<$ll-1 ; $j++ )
+
+
             
            
     }

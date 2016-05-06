@@ -126,7 +126,7 @@
 				$outputGroup = implode($outputGroup);
 			return $outputGroup;
 			}
-
+			/**search path pic from latlng and heading **/
 			public static function searchpathpicfrompicdb($latlng,$head){
 			$data=picEloquent::where('latlng','LIKE',"%".$latlng."%");
 			$data=$data->where('heading','LIKE',"%".$head."%");
@@ -141,6 +141,9 @@
 				$outputGroup = implode($outputGroup);
 			return $outputGroup;
 			}
+
+
+
 
 			
 

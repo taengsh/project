@@ -49,8 +49,14 @@ class LatlngController extends BaseController
           /**start process-----get data from DBlatlng ----> data to DBpic  ------->data to DBgrouppic**/ 
           
           /********************************************************************************************/
-
+            
+            /**Variable for Image part**/ 
+            chdir('assets');//cheng folder to play evryTh in assets
+            $size=array("0","60","90","120","150");
+            $size1=array("600","480","420","360","300");
+            $incImg=0;
           /**Variable Global**/
+          
           $groupArrLatlng = '';
           $groupArrHead = '';
           $inforeiei = 0;
@@ -96,7 +102,7 @@ class LatlngController extends BaseController
             $addPic->heading= $arrayh[$i];
 
             $image ='https://maps.googleapis.com/maps/api/streetview?size=600x600&location='.$addPic->latlng.'&heading='.$addPic->heading.'&key=AIzaSyDbRxjnjKyaZ664VL-N8U1ybB8yzt8e4oY&pitch=-0.76';
-            $img = 'assets/'.$objstart.'to'.$objend.$i.'.jpg';
+            $img = $i.$objstart.'to'.$objend.'.jpg';
             //$img = 'assets/'.$addPic->latlng.'A'.$addPic->heading.'.png';
           
             /**try to check aready have pic in DB and get pic from picDB to make VDO(SEARCH in pic DB)  **/
@@ -112,12 +118,61 @@ class LatlngController extends BaseController
                 file_put_contents($img,file_get_contents($image));
                 $addPic->namelink = $image;
                 $addPic->pic = $img;
-                $addPic->save();  
-
-
-                
-               
+                $addPic->save();          
             }
+
+
+              /**chk if have newpic in new route have multiple with same way**/
+                    $img1 = $i.$objstart.'to'.$objend.'.jpg';
+                    $picOrigin = new search;
+                    $covalence = str_replace(' ','',$array[$i]);//beacz have space to replace
+                    $headeee= $arrayh[$i];
+                    $picOri = $picOrigin->searchpathpicfrompicdb($covalence,$headeee);
+
+                    //var_dump("------------------".$picOri);
+                    //var_dump("=======".$img1);
+
+                    if(!strcmp($picOri,$img1)){
+                       // var_dump("in IMG process");
+                      // Create a blank image and add some text 
+                            
+                    
+                    $im = imagecreatefromjpeg($img1);
+      
+                          for ($ii = 0; $ii <=4; $ii++) {
+                           
+                            $namepicImg = $objstart.'to'.$objend.$incImg.'.jpg';
+                            $picAfimgAA = new search;
+                            $picAfimg = $picAfimgAA->searchpicfrompicImage($namepicImg);
+                            
+                            $grouppicImg = new picImageEloquent();
+                            $grouppicImg->latlng=str_replace(' ','',$array[$i]);
+                            $grouppicImg->heading=$arrayh[$i];
+                       
+
+                            if(strcmp($picAfimg,$namepicImg)){//not found then save
+
+                            $to_crop_array = array('x' =>$size[$ii] , 'y' =>$size[$ii], 'width' => $size1[$ii], 'height'=> $size1[$ii]);
+                            $thumb_im = imagecrop($im, $to_crop_array);
+                            $thumb = imagescale($thumb_im, 600,600);
+                            imagejpeg($thumb, $objstart.'to'.$objend.$incImg.'.jpg',100); 
+                              
+                              $grouppicImg->picImage= $namepicImg;
+                              $grouppicImg->save();
+                             // var_dump("-----".$picAfimg."saveeeeeeeeee".$incImg);
+                            }
+    
+                            $incImg+=1;
+
+                          }
+
+
+                  }//end if  /**chk if have newpic in new route have multiple with same way**/
+                
+
+            
+
+
                 //var_dump("have pic in DB pic");
         
             /*******************************************/
@@ -137,6 +192,8 @@ class LatlngController extends BaseController
                  // var_dump(($i)."-----commit----");
                   //var_dump("startpoint---".$startpoint);
                   $grouppic = new GrouppicEloquent();
+                  $grouppic->start=$objstart;
+                  $grouppic->end=$objend;
                   $grouppic->groupLatlng=str_replace(' ','',$groupArrLatlng);
                   $grouppic->groupHeading=$groupArrHead;
           
@@ -184,23 +241,50 @@ class LatlngController extends BaseController
             /************************************************/
             /** make image process                            Here    saveto new DB   **/
             /***************************************************/
+         
+  
+
+
+
+
 
 
           /*******************************************************/
           /**           Start PROCESS MAKE VDO                 **/
           /**find latlngstart latlngend get link old vdo**/
           /*******************************************************/
-
+            $eFern=0;//right str path pic
             $strPictureTen="";
-            $groupPoint=10;//number of pic in VDO
-            chdir('assets');
-            for( $j=0 ; $j<$ll-1 ; $j++ ){
+            $groupPoint=50;//number of pic in VDO
+            $Numround = ($ll-1)*5;
+            $NumStart = 0;
+
+
+
+
             
-            $latlngfind = str_replace(' ','',$array[$j]);//beacz have space to replace
+            for( $j=0 ; $j<$Numround ; $j++ ){
+            
+        /*    $latlngfind = str_replace(' ','',$array[$j]);//beacz have space to replace
             $headfind= $arrayh[$j];
             $StrPic = new search;
-            $SetOfStrPic = $StrPic->searchpathpicfrompicdb($latlngfind,$headfind);
-            $strPictureTen .= $SetOfStrPic.',';//str with commar ten point
+            $SetOfStrPic = $StrPic->searchpicfrompicImageBylatlng($latlngfind,$headfind);
+            $strSetOf = implode(",",$SetOfStrPic);
+            $strSetOf = explode(",",$strSetOf,2);
+          
+            $numEfern = strlen((string)$eFern);//size right str path pic
+           
+            $TETE = substr($strSetOf[0],0,-(((int)$numEfern)+4));*/
+            
+            
+           //var_dump($strSetOf[0]);
+          // var_dump("+++++++++");
+          // var_dump($TETE);
+
+           //$eFern+=5;
+        
+           // substr("Hello world",6);
+           //$strPictureTen .= $SetOfStrPic.',';//str with commar ten point
             //str with commar split to array
             //var_dump($j);
             //var_dump($latlngfind);
@@ -208,18 +292,24 @@ class LatlngController extends BaseController
             
 
                 if($j%$groupPoint==0){
-             var_dump($strPictureTen);
-                //shell_exec ("ffmpeg -r 1 -f image2 -start_number ".$j." -i ".$objstart."to".$objend."%d.jpg -vframes ".$groupPoint." group".$objstart."to".$objend."and".$j."pic.avi");
-                 $sublink = new SubLinkVDOEloquent();
+
+                
+                    shell_exec ("ffmpeg -r 1 -f image2 -start_number ".$j." -i ".$objstart."to".$objend."%d.jpg -vframes ".$groupPoint." group".$objstart."to".$objend."and".$j."pic.avi");
+                     $sublink = new SubLinkVDOEloquent();
                      $sublink->start = $objstart;
                      $sublink->end = $objend;
                      $sublink->linkVDO = "group".$objstart."to".$objend."and".$j."pic.avi";
                      $sublink->latlngStart = "firstpointofG";
                      $sublink->latlngEnd = "lastpointofG";
                      $strPictureTen='';
-                    // $sublink->save();
-                }
 
+                     //var_dump( shell_exec("ls"));
+                   var_dump("--------------------------------------------".$j."------------------------------------------------------");
+                  
+                     $sublink->save();
+                }
+              
+              var_dump("///////////////////////////".$j."///////////////////////");
       
         }//end make VDO   for( $j=0 ; $j<$ll-1 ; $j++ )
 

@@ -139,10 +139,38 @@
 				}
 				/**make array to string*/
 				$outputGroup = implode($outputGroup);
+				//var_dump($outputGroup);
 			return $outputGroup;
 			}
 
+				/*** search picImage  search by namepic****/
+			public static function searchpicfrompicImage($picimg){
+			$data=picImageEloquent::where('picImage','LIKE',"%".$picimg."%")->get();
 
+			$outputGroup=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputGroup[$a]=$data[$a]->picImage;
+				}
+				$outputGroup = implode($outputGroup);
+				//var_dump($outputGroup);
+			return $outputGroup;
+			}
+				/*** search picImage  search by latlng heading ****/
+			public static function searchpicfrompicImageBylatlng($latlngE,$headingE){
+			$data=picImageEloquent::where('latlng','LIKE',"%".$latlngE."%");
+			$data=$data->where('heading','LIKE',"%".$headingE."%");
+			$data=$data->get();
+
+			$outputGroup=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputGroup[$a]=$data[$a]->picImage;
+				}
+				//$outputGroup = implode($outputGroup);
+				//var_dump($outputGroup);
+			return $outputGroup;
+			}
 
 
 			

@@ -126,6 +126,22 @@
 				$outputGroup = implode($outputGroup);
 			return $outputGroup;
 			}
+
+			public static function searchlinkVdobylinkVdoFromLinkVDO($namevdo){
+				//plese check latlng and heading
+			$data=SubLinkVDOEloquent::where('linkVDO','LIKE',"%".$namevdo."%")->get();
+			$outputPic=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputPic[$a]=$data[$a]->linkVDO;
+				}
+				/**make array to string*/
+				$outputPic = implode($outputPic);
+				//var_dump($outputPic);
+			return $outputPic;
+			}
+
+
 			/**search path pic from latlng and heading **/
 			public static function searchpathpicfrompicdb($latlng,$head){
 			$data=picEloquent::where('latlng','LIKE',"%".$latlng."%");
@@ -172,6 +188,19 @@
 			return $outputGroup;
 			}
 
+			public static function searchNamePicbyItselfFromPicImg($pic){
+				//plese check latlng and heading
+			$data=picImageEloquent::where('picImage','LIKE',"%".$pic."%")->get();
+			$outputPic=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputPic[$a]=$data[$a]->picImage;
+				}
+				/**make array to string*/
+				$outputPic = implode($outputPic);
+				//var_dump($outputPic);
+			return $outputPic;
+			}
 
 			
 

@@ -9,13 +9,32 @@ class LatlngController extends BaseController
        return View::make('latlng');
     }
      
+     public function getsearchmap1()
+    {
+        //return View::make('nurse');
+       return View::make('latlngNSC');
+    }
+    public function getsearchmap11()
+    {
+        //return View::make('nurse');
+       //return View::make('latlngNSC');
+      $objstart = $_POST["origin"];
+      $objend = Input::get('destination');
+       $name = new requestplace();
+        $namestart = $name->getStartname($objstart);
+        $nameend = $name->getEndname($objend);
+    }
+
+
     public function getdirection()
     {
           $objstart = Input::get('origin');
           $objend = Input::get('destination');
+          $name = new requestplace();
+          $namestart = $name->getStartname($objstart);
+          $nameend = $name->getEndname($objend);
 
           $namelatlng = '';
-          
           $chklatlng = new search();
           $namelatlng = $chklatlng->searchNamelatlng($objstart,$objend);
           $nameStEn=$objstart.$objend;
@@ -32,12 +51,12 @@ class LatlngController extends BaseController
             $sublinkvdoindb = new search;
             $searchvdo = $sublinkvdoindb->searchsubvdoByStEn($objstart,$objend);
           
-           // var_dump("LINK-----------".$searchvdo);
+            var_dump("LINK-----------".$searchvdo);
 
           }
 
           else {
-
+            var_dump("SAVE new");
             $addLatlng->save();
 
             /**find grouppic ==**/
@@ -258,15 +277,26 @@ class LatlngController extends BaseController
             $groupPoint=50;//number of pic in VDO
             $Numround = ($ll-1)*5;
             $NumStart = 0;
+            $Numtotal = ($ll-2)%10;
 
-
-
-
-            
+            $numFirstoflastGroup = ($ll-(($ll-1)%10))-1;//90
+            $numLastoflastGroup = $ll;
+         
             for( $j=0 ; $j<$Numround ; $j++ ){
+
+              $imgChk = $objstart."to".$objend.$j.".jpg";
+              $imgser = new search;
+              $imgserEd = $imgser->searchNamePicbyItselfFromPicImg($imgChk);
+              //if chk have pic to do VDO
+              if(!strcmp($imgChk,$imgserEd)){
+
             
-        /*    $latlngfind = str_replace(' ','',$array[$j]);//beacz have space to replace
-            $headfind= $arrayh[$j];
+
+          /*  $headfind= $arrayh[$j];
+
+           $latlngfind = str_replace(' ','',$array[$NumStart]);//beacz have space to replace
+              $NumStart+=10;
+
             $StrPic = new search;
             $SetOfStrPic = $StrPic->searchpicfrompicImageBylatlng($latlngfind,$headfind);
             $strSetOf = implode(",",$SetOfStrPic);
@@ -292,24 +322,43 @@ class LatlngController extends BaseController
             
 
                 if($j%$groupPoint==0){
-
+             
                 
-                    shell_exec ("ffmpeg -r 1 -f image2 -start_number ".$j." -i ".$objstart."to".$objend."%d.jpg -vframes ".$groupPoint." group".$objstart."to".$objend."and".$j."pic.avi");
+                   
                      $sublink = new SubLinkVDOEloquent();
                      $sublink->start = $objstart;
                      $sublink->end = $objend;
                      $sublink->linkVDO = "group".$objstart."to".$objend."and".$j."pic.avi";
-                     $sublink->latlngStart = "firstpointofG";
-                     $sublink->latlngEnd = "lastpointofG";
-                     $strPictureTen='';
 
-                     //var_dump( shell_exec("ls"));
-                   var_dump("--------------------------------------------".$j."------------------------------------------------------");
-                  
-                     $sublink->save();
+
+
+                     $sublink->latlngStart = str_replace(' ','',$array[$NumStart]);//beacz have space to replace;
+                     if($NumStart==$numFirstoflastGroup){
+                      $sublink->latlngEnd = str_replace(' ','',$array[$NumStart+$Numtotal]);
+                      var_dump("++------------lastloop++");
+                      var_dump($NumStart+$Numtotal);
+                     }
+                     else{
+                      var_dump("++another++");
+                      var_dump($NumStart);
+                      $sublink->latlngEnd = str_replace(' ','',$array[$NumStart+9]);
+                      }
+                     
+                     $NumStart+=10;
+
+                    var_dump("--------------------------------------------".$j."------------------------------------------------------".$numFirstoflastGroup);
+                    $findvdo = new search;
+                    $findvdoED=$findvdo->searchlinkVdobylinkVdoFromLinkVDO($sublink->linkVDO);
+                     
+                    if(strcmp($sublink->linkVDO,$findvdoED)) {//if not have vdo then save
+                      shell_exec ("ffmpeg -r 1 -f image2 -start_number ".$j." -i ".$objstart."to".$objend."%d.jpg -vframes ".$groupPoint." group".$objstart."to".$objend."and".$j."pic.avi");
+                      $sublink->save();
+                   }
                 }
               
               var_dump("///////////////////////////".$j."///////////////////////");
+
+            }//end if chk have pic to do VDO
       
         }//end make VDO   for( $j=0 ; $j<$ll-1 ; $j++ )
 

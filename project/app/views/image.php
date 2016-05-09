@@ -11,12 +11,15 @@
 	echo "<hr />";*/
 
 
-	chdir('assets');
-	$size=array("60","90","120","150");
-	$size1=array("480","420","360","300");
+	//chdir('assets');
+	//$size=array("60","90","120","150");
+	//$size1=array("480","420","360","300");
 	
 	//experiment'A'
 	function cropimage($startimg,$endimg){
+	chdir('assets');
+	$size=array("60","90","120","150");
+	$size1=array("480","420","360","300");
 
 	for($a=$startimg; $a<=$endimg; $a++){
 			$img1 = $a.'.jpg';

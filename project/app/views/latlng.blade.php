@@ -96,10 +96,11 @@ function calcRoute() {
                      directionsDisplay.setDirections(response);
                      if (response.routes && response.routes.length > 0) {
                         var routes = response.routes; 
-                        alert("yes");                      
+                        alert("yes"); 
+
                         for (var j = 0; j < routes.length; j++) {
                             var points = routes[j].overview_path;
-                            
+                              
                                
                             //j=j/4;
                             var ul = document.getElementById("vertex");
@@ -114,8 +115,13 @@ function calcRoute() {
 
                                container.appendChild(document.createTextNode("Member " + (i)+1));
 
+
                             
                               if(points[i+1]!=null){
+                                  //  var pointAdd =setdelta(points[i].lat(),points[i].lng(),points[i+1].lat(),points[i+1].lng());
+
+                                    //alert(pointAdd[i].lat());
+
                                      bear = bearling(points[i].lat(),points[i].lng(),points[i+1].lat(),points[i+1].lng());
                                      invBear = invertBear(bear);
 
@@ -140,7 +146,7 @@ function calcRoute() {
                                // alert(points);                
                               //  input.setAttribute('value',points);
                                 input.setAttribute('value',points);
-                                //dd(points);
+                                //dd(pointAdd);
                                 container.appendChild(input);  
                           
 
@@ -156,7 +162,14 @@ function calcRoute() {
 
 //return 1;
 } 
+function setdelta(lat,lng,nlat,nlng) {
+  var percent ={
+      lat : 0.15*(nlat-lat),
+      lng : 0.15*(nlng-lng)
 
+  };
+  return percent;
+}
 
 
 function getLiText(point1) {
@@ -170,7 +183,7 @@ function getLiText(point1) {
 }
 function bearling(lat,lng,nlat,nlng){
           //  alert("bearingWork");
-             var y = Math.sin(nlng-lng) * Math.cos(nlat);
+          var y = Math.sin(nlng-lng) * Math.cos(nlat);
           var x = Math.cos(lat)*Math.sin(nlat) - Math.sin(lat)*Math.cos(nlat)*Math.cos(nlng-lng);
           var bear = 360+((Math.atan2(y, x)*180)/Math.PI);
           bear=bear%360;

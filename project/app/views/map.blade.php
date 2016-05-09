@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="project">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,7 +29,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     </head><!--/head-->
 
-    <body>
+    <body ng-controller="ProjectController as project">
                <header id="header">      
 
         <div class="navbar navbar-inverse" role="banner">
@@ -107,10 +107,11 @@
             <div class = "col-md-3">
               <br><br><br><br><br>
               <div class="form-group">
-                  <input id="origin" type="text" class="form-control" placeholder="origin" value="">
+                  <input id="origin" ng-model="project.name" name="origin" type="text" class="form-control" placeholder="origin" value="">
               </div>
+              <span ng-if="done()"></span>
               <div class="form-group">
-                  <input id="destination" type="text" class="form-control" placeholder="destination" value="">
+                  <input id="destination" ng-model="project.destination" name="destination" type="text" class="form-control" placeholder="destination" value="">
               </div>
                   <input type="submit" class="btn btn-success btn-block btn-lg" value="Create" onclick="calcRoute()">
             </div>
@@ -124,7 +125,6 @@
         var head="";
         var mapOptions;
 
-
         function initialize() {
             directionsDisplay = new google.maps.DirectionsRenderer();
 
@@ -136,73 +136,73 @@
             directionsDisplay.setMap(map);
         }
 
-        function calcRoute() {
-            var start = document.getElementById('origin').value;
-            var end = document.getElementById('destination').value;
-            var request = {
-                origin: start,
-                destination: end,
-                travelMode: google.maps.TravelMode.DRIVING
-            };
-            //alert("0000");
+//         function calcRoute() {
+//             var start = document.getElementById('origin').value;
+//             var end = document.getElementById('destination').value;
+//             var request = {
+//                 origin: start,
+//                 destination: end,
+//                 travelMode: google.maps.TravelMode.DRIVING
+//             };
+//             //alert("0000");
 
-            directionsService.route(request, function (response, status) {
-                if (status == google.maps.DirectionsStatus.OK) {
-                     var warnings = document.getElementById("warnings_panel");
-                     //warnings.innerHTML = "" + response.routes[0].warnings + "";
+//             directionsService.route(request, function (response, status) {
+//                 if (status == google.maps.DirectionsStatus.OK) {
+//                      var warnings = document.getElementById("warnings_panel");
+//                      //warnings.innerHTML = "" + response.routes[0].warnings + "";
 
-                    directionsDisplay.setDirections(response);
-                    if (response.routes && response.routes.length > 0) {
-                        var routes = response.routes;
-                        //alert(routes.length);
-                        alert("yes"); 
-                        for (var j = 0; j < routes.length; j++) {
-                            var points = routes[j].overview_path;
-                            //j=j/4;
-                            var ul = document.getElementById("vertex");
-                            //alert(points.length);//half of prin to screen
-                            for (var i = 0; i < points.length; i++) {
-                                var li = document.createElement('li');
-                                li.innerHTML = getLiText(points[i]);
-                                ul.appendChild(li);
+//                     directionsDisplay.setDirections(response);
+//                     if (response.routes && response.routes.length > 0) {
+//                         var routes = response.routes;
+//                         //alert(routes.length);
+//                         alert("yes"); 
+//                         for (var j = 0; j < routes.length; j++) {
+//                             var points = routes[j].overview_path;
+//                             //j=j/4;
+//                             var ul = document.getElementById("vertex");
+//                             //alert(points.length);//half of prin to screen
+//                             for (var i = 0; i < points.length; i++) {
+//                                 var li = document.createElement('li');
+//                                 li.innerHTML = getLiText(points[i]);
+//                                 ul.appendChild(li);
 
-                                container.appendChild(document.createTextNode("Member " + (i)+1));
+//                                 container.appendChild(document.createTextNode("Member " + (i)+1));
 
                             
-                              if(points[i+1]!=null){
-                                     bear = bearling(points[i].lat(),points[i].lng(),points[i+1].lat(),points[i+1].lng());
-                                     invBear = invertBear(bear);
+//                               if(points[i+1]!=null){
+//                                      bear = bearling(points[i].lat(),points[i].lng(),points[i+1].lat(),points[i+1].lng());
+//                                      invBear = invertBear(bear);
 
-                                     head+=","+bear;
-                                   // alert(head);
-                                }
-//alert(points[i]);
-                            }
+//                                      head+=","+bear;
+//                                    // alert(head);
+//                                 }
+// //alert(points[i]);
+//                             }
 
-                            var headcal = document.createElement("input");
-                               headcal.type = "hidden";
-                                headcal.name = "member1";
-                                headcal.id = "member1";  
-                                headcal.setAttribute('value',head);
-                                container.appendChild(headcal);
+//                             var headcal = document.createElement("input");
+//                                headcal.type = "hidden";
+//                                 headcal.name = "member1";
+//                                 headcal.id = "member1";  
+//                                 headcal.setAttribute('value',head);
+//                                 container.appendChild(headcal);
 
 
 
-                                var input = document.createElement("input");
-                                input.type = "hidden";
-                                input.name = "member";
-                                input.id = "member";            
-                               // alert(points);                
-                              //  input.setAttribute('value',points);
-                                input.setAttribute('value',points);
-                                //dd(points);
-                                container.appendChild(input); 
-                        }
-                    }
-                }
-                document.getElementById("formRoute").submit(); 
-            });
-        }
+//                                 var input = document.createElement("input");
+//                                 input.type = "hidden";
+//                                 input.name = "member";
+//                                 input.id = "member";            
+//                                // alert(points);                
+//                               //  input.setAttribute('value',points);
+//                                 input.setAttribute('value',points);
+//                                 //dd(points);
+//                                 container.appendChild(input); 
+//                         }
+//                     }
+//                 }
+//                 document.getElementById("formRoute").submit(); 
+//             });
+//         }
 
 
 function getLiText(point1) {
@@ -252,5 +252,7 @@ function bearling(lat,lng,nlat,nlng){
     <script type="text/javascript" src="js/gmaps.js"></script>
     <script type="text/javascript" src="js/wow.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>   
+    <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/chanon.js"></script>  
 </body>
 </html>

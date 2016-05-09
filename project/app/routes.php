@@ -52,6 +52,7 @@ Route::get('/profile','UserController@getprofile');
 
 Route::get('searchmap', 'LatlngController@getsearchmap');
 Route::post('searchmap/direction', 'LatlngController@getdirection');
+//Route::post('searchmap/direction', 'LatlngController@getsearchmap11');
 
 Route::get('/map','UserController@getmap');
 
@@ -88,10 +89,18 @@ Route::get('/maproute', function()
     return View::make('latlngNSC');
 });
 
-Route::get('testyoutube','testyoutubeController@getindexweb');
+//Route::get('testyoutube','testyoutubeController@getindexweb');
+Route::get('testyoutube','testyoutubeController@uploadvideo');
+//Route::post('');
+
 Route::get('/testimage','testyoutubeController@gettestimage');
 //Route::get('/test','testyoutubeController@geteiei');
 //Route::get('testt','testyoutubeController@getindexweb');
 
-
+Route::get('testplaylist','testyoutubeController@createPlaylist');
 //Route::get('testupload','testyoutubeController@gettestupload');
+
+Route::get('/map1', function()
+{
+    return View::make('mapviews');
+});

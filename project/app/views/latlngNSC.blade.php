@@ -90,37 +90,47 @@
             </div>
         </div>
     </section>
+
     <div class="container-fluid">
+
     <div class="container">
     <br><br><br>
       <div class = "col-md-8">
                 <div id="map-canvas"></div>
             </div>
+<form action="{{url('searchmap/direction')}}" method="post" files="true"  id="formRoute">
       <div class = "col-md-4">
               <br><br><br><br><br>
               <div class = "col-md-4"> ต้นทาง : </div>
               <div class = "col-md-8"> 
+
+
                 <div class="form-group">
-                        <input id="origin" type="text" class="form-control" placeholder="origin" value="">
+                        <input id="origin" name="origin" type="text" class="form-control" placeholder="origin" value="">
                 </div>
               </div>
               <div class = "col-md-4"> ปลายทาง : </div>
               <div class = "col-md-8"> 
                 <div class="form-group">
-                      <input id="destination" type="text" class="form-control" placeholder="destination" value="">
+                      <input id="destination" name="destination" type="text" class="form-control" placeholder="destination" value="">
                 </div>
             </div>
                         <div class = "col-md-6">
                         <input type="submit" class="btn btn-success btn-block btn-lg" value="Create Route" onclick="calcRoute()">
                         </div>
                         <div class = "col-md-6">
-                          <a href="/project/public/video" class="btn btn-info btn-block btn-lg">Video</a>
-                        <!--input type="submit" class="btn btn-info btn-block btn-lg" value="Video" -->
+                         <!-- <a href="/project/public/video" class="btn btn-info btn-block btn-lg">Video</a>-->
+                        <input type="submit" class="btn btn-info btn-block btn-lg" value="createVideo" onclick="RouteVDO()">
                         </div>
+</form> 
+
+
             </div>
+ 
+
         </div>
     </div>
-    
+   
 
     <script type="text/javascript">
         var directionsDisplay;
@@ -137,7 +147,7 @@
             map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
             directionsDisplay.setMap(map);
         }
-
+/**
         function calcRoute() {
             var start = document.getElementById('origin').value;
             var end = document.getElementById('destination').value;
@@ -171,6 +181,139 @@
                 }
             });
         }
+**/
+        /********************************************************/
+        /**            CLICK createVDO                         **/
+        /********************************************************/
+
+function RouteVDO() {
+
+
+
+    var start = document.getElementById('origin').value; 
+
+    var end = document.getElementById('destination').value; 
+    
+    var request = {
+        origin: start,
+        destination: end,
+        travelMode: google.maps.TravelMode.DRIVING
+    }; 
+  
+    
+    directionsService.route(request, function (response, status) {   
+   //alert("directionsService.rout");
+
+        if (status == google.maps.DirectionsStatus.OK) {
+         var warnings = document.getElementById("warnings_panel");
+          
+                     //warnings.innerHTML = "" + response.routes[0].warnings + "";
+                     directionsDisplay.setDirections(response);
+                     
+                     if (response.routes && response.routes.length > 0) {
+                        var routes = response.routes; 
+                        
+
+                        for (var j = 0; j < routes.length; j++) {
+                            var points = routes[j].overview_path;
+                              
+                               
+                            //j=j/4;
+                            var ul = document.getElementById("vertex");
+                            //alert(points.length);//half of prin to screen
+                        
+                        
+                           for (var i = 0; i < points.length; i++) {
+                              
+                                var li = document.createElement('li');
+                                li.innerHTML = getLiText(points[i]);
+                                ul.appendChild(li);
+
+                               container.appendChild(document.createTextNode("Member " + (i)+1));
+
+                                
+                            
+                              if(points[i+1]!=null){
+                                  //  var pointAdd =setdelta(points[i].lat(),points[i].lng(),points[i+1].lat(),points[i+1].lng());
+
+                                    //alert(pointAdd[i].lat());
+
+                                     bear = bearling(points[i].lat(),points[i].lng(),points[i+1].lat(),points[i+1].lng());
+                                     invBear = invertBear(bear);
+
+                                     head+=","+bear;
+                                   // alert(head);
+                                }
+                                  
+                            }
+                              var headcal = document.createElement("input");
+                               headcal.type = "hidden";
+                                headcal.name = "member1";
+                                headcal.id = "member1";  
+                                headcal.setAttribute('value',head);
+                                container.appendChild(headcal);
+
+
+
+                                var input = document.createElement("input");
+                                input.type = "hidden";
+                                input.name = "member";
+                                input.id = "member";            
+                               // alert(points);                
+                              //  input.setAttribute('value',points);
+                                input.setAttribute('value',points);
+                                //dd(pointAdd);
+                                container.appendChild(input);  
+                          
+
+
+                        }//end for route length
+                        
+                    }//end if response.routes
+                   
+               
+        } //end if status
+        console.log(input);
+        document.getElementById("formRoute").submit(); 
+    }); //alert(head);//end direction service 
+
+//return 1;
+} 
+function setdelta(lat,lng,nlat,nlng) {
+  var percent ={
+      lat : 0.15*(nlat-lat),
+      lng : 0.15*(nlng-lng)
+
+  };
+  return percent;
+}
+
+
+function getLiText(point1) {
+    var lat1 = point1.lat(),
+        lng1 = point1.lng();
+      //  lat2 = point2.lat(),
+        //lng2 = point2.lng();
+
+    return lat1+","+lng1 ;
+    //"("+lat + "," + lng+")";
+}
+function bearling(lat,lng,nlat,nlng){
+          //  alert("bearingWork");
+          var y = Math.sin(nlng-lng) * Math.cos(nlat);
+          var x = Math.cos(lat)*Math.sin(nlat) - Math.sin(lat)*Math.cos(nlat)*Math.cos(nlng-lng);
+          var bear = 360+((Math.atan2(y, x)*180)/Math.PI);
+          bear=bear%360;
+
+              return bear.toFixed(2);
+        }
+
+    function invertBear(bear){
+      if (bear<180) return bear+180;
+      else return bear-180;
+    }
+
+
         
 
         google.maps.event.addDomListener(window, 'load', initialize);

@@ -123,7 +123,7 @@
 				}
 
 					/**make array to string*/
-				$outputGroup = implode($outputGroup);
+				//$outputGroup = implode($outputGroup);
 			return $outputGroup;
 			}
 
@@ -195,6 +195,36 @@
 			$size=count($data);
 					for ($a=0;$a<$size;$a++) {
 						$outputPic[$a]=$data[$a]->picImage;
+				}
+				/**make array to string*/
+				$outputPic = implode($outputPic);
+				//var_dump($outputPic);
+			return $outputPic;
+			}
+
+			public static function searchvdofromLinkVDO($latS,$latE){
+			$data=linkVDOEloquent::where('latlngStart','LIKE',"%".$latS."%");
+			$data=$data->where('latlngEnd','LIKE',"%".$latE."%");
+			$data=$data->get();
+
+			$outputGroup=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputGroup[$a]=$data[$a]->linkVDO;
+				}
+				$outputGroup = implode($outputGroup);
+				//var_dump($outputGroup);
+			return $outputGroup;
+			}
+
+			/****LINKVDOYOUTUBE AREADY IN DB ??? search by link on youtube *****/
+			public static function searchlinkYoutubebynamelink($link){
+				//plese check latlng and heading
+			$data=playlistVDOEloquent::where('linkPlaylist','LIKE',"%".$link."%")->get();
+			$outputPic=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputPic[$a]=$data[$a]->linkPlaylist;
 				}
 				/**make array to string*/
 				$outputPic = implode($outputPic);

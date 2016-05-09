@@ -17,8 +17,8 @@ ini_set("max_execution_time", 0);
      */
 
 
-    $OAUTH2_CLIENT_ID = '225495119308-pho565qrgiaj6urmspmr8j424dv0thjj.apps.googleusercontent.com';
-    $OAUTH2_CLIENT_SECRET = 'NIWAtPJqZctnoVcwCwvsNPrv';
+    $OAUTH2_CLIENT_ID = '1099096092113-fjp7osplt9u776bhqignu5mtkardat8c.apps.googleusercontent.com';
+    $OAUTH2_CLIENT_SECRET = 'LkQEYvZxBwLOiGbmKfkAsOax';
     $htmlBody = "";
     $client = new Google_Client();
     $client->setClientId($OAUTH2_CLIENT_ID);

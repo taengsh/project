@@ -49,13 +49,13 @@
 			return $outputHead;
 			}
 			/**Search name picture in DB pic for check aready have in DB**/
-			public static function searchNamePic($nameorigin){
+			public static function searchNamePic($img){
 				//plese check latlng and heading
-			$data=picEloquent::where('namelink','LIKE',"%".$nameorigin."%")->get();
+			$data=picEloquent::where('pic','LIKE',$img)->get();
 			$outputPic=array();
 			$size=count($data);
 					for ($a=0;$a<$size;$a++) {
-						$outputPic[$a]=$data[$a]->namelink;
+						$outputPic[$a]=$data[$a]->pic;
 				}
 				/**make array to string*/
 				$outputPic = implode($outputPic);
@@ -143,11 +143,9 @@
 
 
 			/**search path pic from latlng and heading **/
-			public static function searchpathpicfrompicdb($latlng,$head){
-			$data=picEloquent::where('latlng','LIKE',"%".$latlng."%");
-			$data=$data->where('heading','LIKE',"%".$head."%");
+			public static function searchpathpicfrompicdb($namepiceiei){
+			$data=picEloquent::where('pic','LIKE',$namepiceiei);
 			$data=$data->get();
-
 			$outputGroup=array();
 			$size=count($data);
 					for ($a=0;$a<$size;$a++) {
@@ -160,8 +158,22 @@
 			}
 
 				/*** search picImage  search by namepic****/
-			public static function searchpicfrompicImage($picimg){
+			public static function searchlatlngfrompicImage($picimg){
 			$data=picImageEloquent::where('picImage','LIKE',"%".$picimg."%")->get();
+
+			$outputGroup=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputGroup[$a]=$data[$a]->latlng;
+				}
+				$outputGroup = implode($outputGroup);
+				//var_dump($outputGroup);
+			return $outputGroup;
+			}
+
+				/*** search picImage  search by namepic****/
+			public static function searchpicfrompicImage($picimg){
+			$data=picImageEloquent::where('picImage','LIKE',$picimg)->get();
 
 			$outputGroup=array();
 			$size=count($data);
@@ -217,6 +229,21 @@
 			return $outputGroup;
 			}
 
+			/****find path VDO from playlistVDO paramet is path vdo(namevdoserv)*****/
+			public static function searchpathvdoFromServInplaylistVDO($path){
+				//plese check latlng and heading
+			$data=playlistVDOEloquent::where('namevdoServ','LIKE',"%".$path."%")->get();
+			$outputPic=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputPic[$a]=$data[$a]->namevdoServ;
+				}
+				/**make array to string*/
+				$outputPic = implode($outputPic);
+				//var_dump($outputPic);
+			return $outputPic;
+			}
+
 			/****LINKVDOYOUTUBE AREADY IN DB ??? search by link on youtube *****/
 			public static function searchlinkYoutubebynamelink($link){
 				//plese check latlng and heading
@@ -231,6 +258,25 @@
 				//var_dump($outputPic);
 			return $outputPic;
 			}
+
+
+			public static function searchkeyFromYoutube($latS,$latE){
+			$data=playlistVDOEloquent::where('latlngStart','LIKE',"%".$latS."%");
+			$data=$data->where('latlngEnd','LIKE',"%".$latE."%");
+			$data=$data->get();
+
+			$outputGroup=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputGroup[$a]=$data[$a]->idLink;
+				}
+				$outputGroup = implode($outputGroup);
+				//var_dump($outputGroup);
+			return $outputGroup;
+			}
+
+
+
 
 			
 

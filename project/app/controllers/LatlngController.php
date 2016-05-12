@@ -124,13 +124,15 @@ class LatlngController extends BaseController
           
             /**try to check aready have pic in DB and get pic from picDB to make VDO(SEARCH in pic DB)  **/
             $pic = new search;
-            $searchPic = $pic->searchNamePic($image);
+            $searchPic = $pic->searchNamePic($img);
             /**Chk if have pic in DB-> goto process make video**/
             /**Chk if Not have pic in DB -> it will call http to get pic from GG
               plese change Algorithm compare latlng,heading of latlngDB and picDB**/
         
-            if (strcmp($image,$searchPic)){
-                 // var_dump($img);
+            if (strcmp($img,$searchPic)){
+                  var_dump("++++++++".$img);
+                  var_dump("===========================");
+                  var_dump($searchPic."++++++++++");
              
                 file_put_contents($img,file_get_contents($image));
                 $addPic->namelink = $image;
@@ -147,12 +149,12 @@ class LatlngController extends BaseController
                     $picOrigin = new search;
                     $covalence = str_replace(' ','',$array[$i]);//beacz have space to replace
                     $headeee= $arrayh[$i];
-                    $picOri = $picOrigin->searchpathpicfrompicdb($covalence,$headeee);
+                    $picOri = $picOrigin->searchpathpicfrompicdb($img1);
 
                     //var_dump("------------------".$picOri);
                     //var_dump("=======".$img1);
 
-                    if(!strcmp($picOri,$img1)){
+                    if(!strcmp($picOri,$img1)){//cmp pic on picDB
                        // var_dump("in IMG process");
                       // Create a blank image and add some text 
                             
@@ -169,7 +171,7 @@ class LatlngController extends BaseController
                             $grouppicImg->latlng=str_replace(' ','',$array[$i]);
                             $grouppicImg->heading=$arrayh[$i];
                        
-
+                            //cmp pic on picImageDB
                             if(strcmp($picAfimg,$namepicImg)){//not found then save
 
                             $to_crop_array = array('x' =>$size[$ii] , 'y' =>$size[$ii], 'width' => $size1[$ii], 'height'=> $size1[$ii]);
@@ -179,7 +181,7 @@ class LatlngController extends BaseController
                               
                               $grouppicImg->picImage= $namepicImg;
                               $grouppicImg->save();
-                             // var_dump("-----".$picAfimg."saveeeeeeeeee".$incImg);
+                             var_dump("-----".$picAfimg."saveeeeeeeeee".$incImg);
                             }
     
                             $incImg+=1;
@@ -261,11 +263,11 @@ class LatlngController extends BaseController
             $eFern=0;//right str path pic
             $strPictureTen="";
             $groupPoint=50;//number of pic in VDO
-            $Numround = ($ll-1)*5;
+            $Numround = ($ll-1)*5;//number pic after image
             $NumStart = 0;
             $Numtotal = ($ll-2)%10;
 
-            $numFirstoflastGroup = ($ll-(($ll-1)%10))-1;//90
+             $numFirstoflastGroup = ($ll-(($ll-1)%10))-1;//90
             $numLastoflastGroup = $ll;
          
             for( $j=0 ; $j<$Numround ; $j++ ){
@@ -288,12 +290,12 @@ class LatlngController extends BaseController
                      $sublink->latlngStart = str_replace(' ','',$array[$NumStart]);//beacz have space to replace;
                      if($NumStart==$numFirstoflastGroup){
                       $sublink->latlngEnd = str_replace(' ','',$array[$NumStart+$Numtotal]);
-                      //var_dump("++------------lastloop++");
-                     // var_dump($NumStart+$Numtotal);
+                      var_dump("++------------lastloop++");
+                      var_dump($NumStart+$Numtotal);
                      }
                      else{
-                     // var_dump("++another++");
-                     //var_dump($NumStart);
+                     var_dump("++another++");
+                     var_dump($NumStart);
                       $sublink->latlngEnd = str_replace(' ','',$array[$NumStart+9]);
                       }
                      
@@ -319,8 +321,7 @@ class LatlngController extends BaseController
         /****************************************************/
         /**                    MAKE YOUTUBE               ***/
         /****************************************************/
-
-
+        
         //**variable for VDO latlngStart latlngEND**/
         $numSS=0;
         $numFirstoflastGroupVDO = ($ll-(($ll-1)%10))-1;//90
@@ -378,11 +379,20 @@ class LatlngController extends BaseController
           $findvdotoUp=new search();
           $findvdotoUpED=$findvdotoUp->searchsubvdoByStEn($objstart,$objend);
           $numVDO = count($findvdotoUpED);
+
+
           
+      
 
           for($a=0;$a<$numVDO;$a++){
 
-              $videoPath = $findvdotoUpED[$a] ;
+              $videoPath = $findvdotoUpED[$a];
+
+              $findPathvdo = new search();
+              $findPathvdoED = $findPathvdo->searchpathvdoFromServInplaylistVDO($videoPath);
+
+              /***chk VDO in YOUTUBE****/
+              if(strcmp($videoPath,$findPathvdoED)){
               //$videoPath =implode(" ",$findvdotoUpED);
               $title = "VDO".$findvdotoUpED[$a];
               
@@ -448,6 +458,7 @@ class LatlngController extends BaseController
                   $result = false;
                   if($status != false) {
                    $result = $status;
+
                   }
 
                fclose($handle);
@@ -459,6 +470,7 @@ class LatlngController extends BaseController
                echo sprintf('<li>%s (%s)</li>',
                 $status['snippet']['title'],
                 $status['id']);
+
                 /***SAVE VDO to playlistVDO***/
                 $youtubeDB = new playlistVDOEloquent();
                 $youtubeDB->latlngStart=str_replace(' ','',$array[$numSS]);
@@ -467,21 +479,25 @@ class LatlngController extends BaseController
                       $youtubeDB->latlngEnd = str_replace(' ','',$array[$numSS+$NumtotalVDO]);
                       //var_dump("++------------lastloop++");
                      // var_dump($NumStart+$Numtotal);
-                     }
-                     else{
+                }
+                
+                else{
                      // var_dump("++another++");
                      //var_dump($NumStart);
                       $youtubeDB->latlngEnd = str_replace(' ','',$array[$numSS+9]);
-                      }
+                }
                 
                 $youtubeDB->namevdoServ=$findvdotoUpED[$a];
                 $youtubeDB->linkPlaylist="https://www.youtube.com/watch?v=".$status['id'];
+                $youtubeDB->idLink = $status['id'];
 
                 $linkyoutube=new search();
                 $linkyoutubeED=$linkyoutube->searchlinkYoutubebynamelink($youtubeDB->linkPlaylist);
+
                 if(strcmp($youtubeDB->linkPlaylist,$linkyoutubeED)){
                   $youtubeDB->save();
                   var_dump("my YOUTUBE".$youtubeDB->linkPlaylist."------------------------------------");
+
 
                 }
                 $numSS+=10;
@@ -497,6 +513,9 @@ class LatlngController extends BaseController
 
             $_SESSION['token'] = $client->getAccessToken();
               $group = $group+50;
+
+
+              }///end if chk vdo on youtube
             }//for
           
         } 
@@ -514,12 +533,9 @@ class LatlngController extends BaseController
           echo "You need to.......".$authUrl;
           echo "<a href='".$re."'>authorize access</a>";
           echo " authorize access before proceeding";
-
-
-
         //header('Location: ' . filter_var($auth_url, FILTER_SANITIZE_URL));
-          
         }
+
 
 
 
@@ -527,9 +543,37 @@ class LatlngController extends BaseController
         /******************************************************************************************/
         /***this process get route start-end devine to group -> find linkyoutube FROM playlistVDO**/
         /***                     to order RIGHT VDO ROUTING -> SHOW VDO                         ***/
+        $numFirstoflastGroupVDOPlaylist = ($ll-(($ll-1)%10))-1;//90
+        $NumtotalVDOPlaylist = ($ll-2)%10;//8
 
 
-        
+         for($v = 0; $v<$ll-1; $v++){
+             $startpp = str_replace(' ','',$array[$v]);
+
+                if($v==$numFirstoflastGroupVDOPlaylist){
+                      $endpp =  str_replace(' ','',$array[$v+$NumtotalVDOPlaylist]);
+                      $v+=$startpp+$NumtotalVDOPlaylist;
+                      var_dump("++------------lastloop++");
+                      var_dump($endpp);
+                }
+
+                else{
+                      $endpp = str_replace(' ','',$array[$v+9]);
+                      $v+=9;
+                      var_dump("++another++");
+                      var_dump($numFirstoflastGroupVDOPlaylist);
+                }
+
+
+              $findKEY = new search();
+              $findKEYed = $findKEY->searchkeyFromYoutube($startpp,$endpp);
+              var_dump("----KEY---");
+              var_dump($findKEYed);
+              var_dump("----------------------------------".$v."start------>".$startpp."end------>".$endpp."-----------------------------------");
+
+
+         }
+      
 
 
 

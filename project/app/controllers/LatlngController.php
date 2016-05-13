@@ -54,14 +54,14 @@ class LatlngController extends BaseController
              //   var_dump("GO To find VDO");
 
             //$sublinkvdoindb = new search;
-           // $searchvdo = $sublinkvdoindb->searchsubvdoByStEn($objstart,$objend);
+            // $searchvdo = $sublinkvdoindb->searchsubvdoByStEn($objstart,$objend);
              var_dump("SAVE new");
             $addLatlng->save();
 
           }
 
-        
-          
+
+
           /********************************************************************************************/
           /**start process-----get data from DBlatlng ----> data to DBpic  ------->data to DBgrouppic**/ 
           
@@ -98,6 +98,25 @@ class LatlngController extends BaseController
           /**latlng split **/
           $array = explode('),(', $strsearchlatlng);
           $ll = count($array);
+
+
+          
+        /*********************************************************************************/
+        /**           this for chk VDO on youtube by devide latlng  10 point            **/
+        /**           if match every point then show link from youtube                  **/
+        /**           else to process another at downstair                              **/
+        /*********************************************************************************/
+
+              $findKEYfirstTime = new search();
+              $findKEYfirstTimeed = $findKEYfirstTime->searchkeyFromYoutubeByStEn($objstart,$objend);
+              var_dump("----KEY---");
+              var_dump($findKEYfirstTimeed);
+              var_dump("---------------------------------------------------------------------");
+
+
+
+
+
 
            /**forloop-----get data from DBlatlng ----> data to DBpic  ------->data to DBgrouppic**/ 
           for($i = 0; $i<$ll-1; $i++){
@@ -473,6 +492,8 @@ class LatlngController extends BaseController
 
                 /***SAVE VDO to playlistVDO***/
                 $youtubeDB = new playlistVDOEloquent();
+                $youtubeDB->start = $objstart;
+                $youtubeDB->end = $objend;
                 $youtubeDB->latlngStart=str_replace(' ','',$array[$numSS]);
 
                 if($numSS==$numFirstoflastGroupVDO){
@@ -543,36 +564,16 @@ class LatlngController extends BaseController
         /******************************************************************************************/
         /***this process get route start-end devine to group -> find linkyoutube FROM playlistVDO**/
         /***                     to order RIGHT VDO ROUTING -> SHOW VDO                         ***/
-        $numFirstoflastGroupVDOPlaylist = ($ll-(($ll-1)%10))-1;//90
-        $NumtotalVDOPlaylist = ($ll-2)%10;//8
-
-
-         for($v = 0; $v<$ll-1; $v++){
-             $startpp = str_replace(' ','',$array[$v]);
-
-                if($v==$numFirstoflastGroupVDOPlaylist){
-                      $endpp =  str_replace(' ','',$array[$v+$NumtotalVDOPlaylist]);
-                      $v+=$startpp+$NumtotalVDOPlaylist;
-                      var_dump("++------------lastloop++");
-                      var_dump($endpp);
-                }
-
-                else{
-                      $endpp = str_replace(' ','',$array[$v+9]);
-                      $v+=9;
-                      var_dump("++another++");
-                      var_dump($numFirstoflastGroupVDOPlaylist);
-                }
-
+      
 
               $findKEY = new search();
-              $findKEYed = $findKEY->searchkeyFromYoutube($startpp,$endpp);
+              $findKEYed = $findKEY->searchkeyFromYoutubeByStEn($objstart,$objend);
               var_dump("----KEY---");
               var_dump($findKEYed);
-              var_dump("----------------------------------".$v."start------>".$startpp."end------>".$endpp."-----------------------------------");
+              var_dump("---------------------------------------------------------------------");
 
 
-         }
+         
       
 
 

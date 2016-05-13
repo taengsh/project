@@ -275,6 +275,20 @@
 			return $outputGroup;
 			}
 
+			public static function searchkeyFromYoutubeByStEn($startP,$endP){
+			$data=playlistVDOEloquent::where('start','LIKE',$startP);
+			$data=$data->where('end','LIKE',$endP);
+			$data=$data->get();
+
+			$outputGroup=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputGroup[$a]=$data[$a]->idLink;
+				}
+				//$outputGroup = implode($outputGroup);
+				//var_dump($outputGroup);
+			return $outputGroup;
+			}
 
 
 

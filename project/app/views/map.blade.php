@@ -104,6 +104,7 @@
             <div class = "col-md-9">
                 <div id="map-canvas"></div>
             </div>
+            <form action = "{{url('aa/direction')}}" method="post" files="true" class="form-register" id="formRoute">
             <div class = "col-md-3">
               <br><br><br><br><br>
               <div class="form-group">
@@ -115,6 +116,7 @@
               </div>
                   <input type="submit" class="btn btn-success btn-block btn-lg" value="Create" onclick="calcRoute()">
             </div>
+            </form> 
     
 
     <script type="text/javascript">
@@ -136,73 +138,73 @@
             directionsDisplay.setMap(map);
         }
 
-//         function calcRoute() {
-//             var start = document.getElementById('origin').value;
-//             var end = document.getElementById('destination').value;
-//             var request = {
-//                 origin: start,
-//                 destination: end,
-//                 travelMode: google.maps.TravelMode.DRIVING
-//             };
-//             //alert("0000");
+        function calcRoute() {
+            var start = document.getElementById('origin').value;
+            var end = document.getElementById('destination').value;
+            var request = {
+                origin: start,
+                destination: end,
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+            //alert("0000");
 
-//             directionsService.route(request, function (response, status) {
-//                 if (status == google.maps.DirectionsStatus.OK) {
-//                      var warnings = document.getElementById("warnings_panel");
-//                      //warnings.innerHTML = "" + response.routes[0].warnings + "";
+            directionsService.route(request, function (response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                     var warnings = document.getElementById("warnings_panel");
+                     //warnings.innerHTML = "" + response.routes[0].warnings + "";
 
-//                     directionsDisplay.setDirections(response);
-//                     if (response.routes && response.routes.length > 0) {
-//                         var routes = response.routes;
-//                         //alert(routes.length);
-//                         alert("yes"); 
-//                         for (var j = 0; j < routes.length; j++) {
-//                             var points = routes[j].overview_path;
-//                             //j=j/4;
-//                             var ul = document.getElementById("vertex");
-//                             //alert(points.length);//half of prin to screen
-//                             for (var i = 0; i < points.length; i++) {
-//                                 var li = document.createElement('li');
-//                                 li.innerHTML = getLiText(points[i]);
-//                                 ul.appendChild(li);
+                    directionsDisplay.setDirections(response);
+                    if (response.routes && response.routes.length > 0) {
+                        var routes = response.routes;
+                        //alert(routes.length);
+                        alert("yes"); 
+                        for (var j = 0; j < routes.length; j++) {
+                            var points = routes[j].overview_path;
+                            //j=j/4;
+                            var ul = document.getElementById("vertex");
+                            //alert(points.length);//half of prin to screen
+                            for (var i = 0; i < points.length; i++) {
+                                var li = document.createElement('li');
+                                li.innerHTML = getLiText(points[i]);
+                                ul.appendChild(li);
 
-//                                 container.appendChild(document.createTextNode("Member " + (i)+1));
+                                container.appendChild(document.createTextNode("Member " + (i)+1));
 
                             
-//                               if(points[i+1]!=null){
-//                                      bear = bearling(points[i].lat(),points[i].lng(),points[i+1].lat(),points[i+1].lng());
-//                                      invBear = invertBear(bear);
+                              if(points[i+1]!=null){
+                                     bear = bearling(points[i].lat(),points[i].lng(),points[i+1].lat(),points[i+1].lng());
+                                     invBear = invertBear(bear);
 
-//                                      head+=","+bear;
-//                                    // alert(head);
-//                                 }
-// //alert(points[i]);
-//                             }
+                                     head+=","+bear;
+                                   // alert(head);
+                                }
+//alert(points[i]);
+                            }
 
-//                             var headcal = document.createElement("input");
-//                                headcal.type = "hidden";
-//                                 headcal.name = "member1";
-//                                 headcal.id = "member1";  
-//                                 headcal.setAttribute('value',head);
-//                                 container.appendChild(headcal);
+                            var headcal = document.createElement("input");
+                               headcal.type = "hidden";
+                                headcal.name = "member1";
+                                headcal.id = "member1";  
+                                headcal.setAttribute('value',head);
+                                container.appendChild(headcal);
 
 
 
-//                                 var input = document.createElement("input");
-//                                 input.type = "hidden";
-//                                 input.name = "member";
-//                                 input.id = "member";            
-//                                // alert(points);                
-//                               //  input.setAttribute('value',points);
-//                                 input.setAttribute('value',points);
-//                                 //dd(points);
-//                                 container.appendChild(input); 
-//                         }
-//                     }
-//                 }
-//                 document.getElementById("formRoute").submit(); 
-//             });
-//         }
+                                var input = document.createElement("input");
+                                input.type = "hidden";
+                                input.name = "member";
+                                input.id = "member";            
+                               // alert(points);                
+                              //  input.setAttribute('value',points);
+                                input.setAttribute('value',points);
+                                //dd(points);
+                                container.appendChild(input); 
+                        }
+                    }
+                }
+                document.getElementById("formRoute").submit(); 
+            });
+        }
 
 
 function getLiText(point1) {
@@ -252,7 +254,7 @@ function bearling(lat,lng,nlat,nlng){
     <script type="text/javascript" src="js/gmaps.js"></script>
     <script type="text/javascript" src="js/wow.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>   
-    <script type="text/javascript" src="js/angular.min.js"></script>
-    <script type="text/javascript" src="js/chanon.js"></script>  
+    <!--<script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/calcRoute.js"></script>  -->
 </body>
 </html>

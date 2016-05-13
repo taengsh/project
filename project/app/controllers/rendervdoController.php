@@ -7,8 +7,8 @@ class rendervdoController extends BaseController{
 
 		//$obj2='KMITL';
 		//$obj = 'ลาดกระบัง';
-	    $obj = '13.824266,100.678877';
-		$obj2 = '13.863739,100.706106';
+	    $obj = 'KMITL';
+		$obj2 = 'สถานีรถไฟหัวตะเข้';
 		
 
 		/**latlng Search **/
@@ -49,14 +49,13 @@ class rendervdoController extends BaseController{
 				//echo getcwd() . "\n";
 				//exec('ls', $out);
 				//var_dump($out);
-				shell_exec ("ffmpeg -r 1 -f image2 -start_number ".$j." -i 13.824266,100.678877%d.jpg -vframes ".$groupPoint." group".$obj."and".$j."pic.avi");
+				shell_exec ("ffmpeg -r 1 -f image2 -start_number ".$j." -i ".$obj."to".$obj2."%d.jpg -vframes ".$groupPoint." group".$obj."to".$obj2."and".$j."pic.avi");
 				echo "Done.\n";
 
 				$sublink = new SubLinkVDOEloquent();
-				$sublink->start = "13.824266,100.678877";
-		
-				$sublink->end = "13.863739,100.706106";
-				$sublink->linkVDO = "group".$obj."and".$j."pic.avi";
+				$sublink->start = $obj;	
+				$sublink->end = $obj2;
+				$sublink->linkVDO = "group".$obj."to".$obj2."and".$j."pic.avi";
 				$sublink->latlngStart = "EIEIE";
 				$sublink->latlngEnd = "lastlsat";
 				$sublink->save();

@@ -1,37 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geocoding service</title>
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Routing Map</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/prettyPhoto.css" rel="stylesheet"> 
     <link href="css/animate.min.css" rel="stylesheet"> 
     <link href="css/main.css" rel="stylesheet">
     <link href="css/responsive.css" rel="stylesheet">
-
-    <!--[if lt IE 9]>
-        <script src="js/html5shiv.js"></script>
-        <script src="js/respond.min.js"></script>
-        <![endif]-->       
-        <link rel="shortcut icon" href="images/ico/favicon.ico">
+    <link rel="shortcut icon" href="images/ico/favicon.ico">
         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
         <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
-        <style>
-      html, body, #map-canvas { height: 100%; min-height: 300px; min-width: 300px; margin: 0px; padding: 0px }
-      #map-canvas { height: 450px; width: 750px; }
+    <style>
+    html, body, #map-canvas { height: 100%; min-height: 300px; min-width: 300px; margin: 0 auto; padding: 0px }
+    #map-canvas { height: 450px; width: 600px; }
     </style>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-    </head><!--/head-->
+   <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 
-    <body>
-               <header id="header">      
+</head>
 
+<body>
+        <header id="header">      
         <div class="navbar navbar-inverse" role="banner">
             <div class="container">
                 <div class="navbar-header">
@@ -76,12 +71,8 @@
             </div>
         </div>
     </header>
-    <!--/#header-->
-        <!--/#header-->   
 
-             
-                
-        <section id="page-breadcrumb">
+    <section id="page-breadcrumb">
             <div class="vertical-center sun">
                <div class="container">
                 <div class="row">
@@ -94,57 +85,74 @@
             </div>
         </div>
     </section>
-    <!--/#action-->
+<br><br><br>
 
-    <div class="container-fluid">
-        <form action = "{{url('aa/direction')}}" method="post" files="true" class="form-register" id="formRoute">
-        <div class="container">
-            <div class = "col-md-9">
-                <div id="map-canvas"></div>
+<div id="container">
+  <form action="{{url('searchmap/direction')}}" method="post" files="true" class="form-register" id="formRoute"> 
+            <div class = "col-md-1">
+            
+            </div>
+
+            <div class = "col-md-6">
+                  <div id="map-canvas"></div>
             </div>
             
-                <div class = "col-md-3">
-                  <br><br><br><br><br>
-                  <div class="form-group">
-                      <input id="origin" name="origin" type="text" class="form-control" placeholder="origin" value="">
-                  </div>
-                  <div class="form-group">
-                      <input id="destination"  name="destination" type="text" class="form-control" placeholder="destination" value="">
-                  </div>
-                      <input type="submit" class="btn btn-success btn-block btn-lg" value="Create" onclick="calcRoute()">
-                </div>
+            <div class = "col-md-3">
+                    <br><br><br><br><br>
+                    <div class="form-group">
+                        <input id="origin" name="origin" type="text" class="form-control" placeholder="origin" value="">
+                    </div>
+                    <div class="form-group">
+                        <input id="destination"  name="destination" type="text" class="form-control" placeholder="destination" value="">
+                    </div>
+                        <input type="submit" class="btn btn-success btn-block btn-lg" value="Create" onclick="calcRoute()">
+            </div>
+           
+            <div class = "col-md-2">
             
-
-  <div id="vertex-container">
-    <ul type="text" name="vertex" id="vertex" class="form-control input-sm" value="" >
-    </ul>
+            </div>
 </div>
-        </div>
-        </form>
+            <!--<label>Origin
+              <input type="text" name="origin" id="origin" class="form-control input-sm" value="">
+          </label>
+          <label>Destination
+            <input type="text" name="destination" id="destination" class="form-control input-sm" value="">
+        </label>
+        <input type="button" value="Create"  onclick="calcRoute()">
+    </div>-->
+</form> 
+    <div id="vertex-container">
+        <ul type="text" name="vertex" id="vertex" class="form-control input-sm" value="" ></ul>
     </div>
+  
+<button class="btn btn-info btn-lg" onclick="calcRoute1()">Create Route</button>
 
 
-    <script type="text/javascript">
-        var directionsDisplay;
-        var directionsService = new google.maps.DirectionsService();
-        var map;
-        var bear,invBear;
-        var head="";
-        var mapOptions;
+
+<script type="text/javascript">
+var directionsDisplay;
+var directionsService = new google.maps.DirectionsService();
+var map;
+//var mycenter = new google.maps.LatLng(13.72148, 100.79151);
+var bear,invBear;
+var head="";
+var mapOptions;
 
 
-        function initialize() {
-            directionsDisplay = new google.maps.DirectionsRenderer();
 
-            var mapOptions = {
-                zoom: 7,
-                center: new google.maps.LatLng(13.72148, 100.79151)
-            };
-            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-            directionsDisplay.setMap(map);
-        }
+function initialize() {
+    directionsDisplay = new google.maps.DirectionsRenderer();
 
-        function calcRoute() {
+    var mapOptions = {
+        zoom: 9,
+        center: new google.maps.LatLng(13.72148, 100.79151)
+    };
+    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    directionsDisplay.setMap(map);
+}
+
+
+function calcRoute1() {
             var start = document.getElementById('origin').value;
             var end = document.getElementById('destination').value;
             var request = {
@@ -169,21 +177,81 @@
                             for (var i = 0; i < points.length; i++) {
                                 var li = document.createElement('li');
                                 li.innerHTML = getLiText(points[i]);
+                                //ul.appendChild(li);
+//alert(points[i]);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
+
+function myFunction() {
+    var person = prompt("Please enter your name", "Harry Potter");
+    
+    if (person != null) {
+        document.getElementById("demo").innerHTML =
+        "Hello " + person + "! How are you today?";
+    }
+}
+
+function calcRoute() {
+
+    var start = document.getElementById('origin').value;
+    var end = document.getElementById('destination').value;
+    var request = {
+        origin: start,
+        destination: end,
+        travelMode: google.maps.TravelMode.DRIVING
+    }; 
+  
+
+    directionsService.route(request, function (response, status) {   
+   //alert("directionsService.rout");
+        if (status == google.maps.DirectionsStatus.OK) {
+         var warnings = document.getElementById("warnings_panel");
+          
+                     //warnings.innerHTML = "" + response.routes[0].warnings + "";
+                     directionsDisplay.setDirections(response);
+                     if (response.routes && response.routes.length > 0) {
+                        var routes = response.routes; 
+                        //alert("yes"); 
+
+                        for (var j = 0; j < routes.length; j++) {
+                            var points = routes[j].overview_path;
+                              
+                               
+                            //j=j/4;
+                            var ul = document.getElementById("vertex");
+                            //alert(points.length);//half of prin to screen
+                        
+                        
+                           for (var i = 0; i < points.length; i++) {
+                              
+                                var li = document.createElement('li');
+                                li.innerHTML = getLiText(points[i]);
                                 ul.appendChild(li);
 
-                                container.appendChild(document.createTextNode("Member " + (i)+1));
+                               container.appendChild(document.createTextNode("Member " + (i)+1));
+
 
                             
                               if(points[i+1]!=null){
+                                  //  var pointAdd =setdelta(points[i].lat(),points[i].lng(),points[i+1].lat(),points[i+1].lng());
+
+                                    //alert(pointAdd[i].lat());
+
                                      bear = bearling(points[i].lat(),points[i].lng(),points[i+1].lat(),points[i+1].lng());
                                      invBear = invertBear(bear);
 
                                      head+=","+bear;
                                    // alert(head);
                                 }
-//alert(points[i]);
+                                  
                             }
-                            var headcal = document.createElement("input");
+                              var headcal = document.createElement("input");
                                headcal.type = "hidden";
                                 headcal.name = "member1";
                                 headcal.id = "member1";  
@@ -199,15 +267,32 @@
                                // alert(points);                
                               //  input.setAttribute('value',points);
                                 input.setAttribute('value',points);
-                                //dd(points);
-                                container.appendChild(input); 
-                        }
-                    }
-                }
-                 document.getElementById("formRoute").submit(); 
-            });
-        }
-        
+                                //dd(pointAdd);
+                                container.appendChild(input);  
+                          
+
+
+                        }//end for route length
+                        
+                    }//end if response.routes
+                   
+               
+        } //end if status
+        document.getElementById("formRoute").submit(); 
+    }); //alert(head);//end direction service 
+
+//return 1;
+} 
+function setdelta(lat,lng,nlat,nlng) {
+  var percent ={
+      lat : 0.15*(nlat-lat),
+      lng : 0.15*(nlng-lng)
+
+  };
+  return percent;
+}
+
+
 function getLiText(point1) {
     var lat1 = point1.lat(),
         lng1 = point1.lng();
@@ -217,10 +302,9 @@ function getLiText(point1) {
     return lat1+","+lng1 ;
     //"("+lat + "," + lng+")";
 }
-
 function bearling(lat,lng,nlat,nlng){
           //  alert("bearingWork");
-             var y = Math.sin(nlng-lng) * Math.cos(nlat);
+          var y = Math.sin(nlng-lng) * Math.cos(nlat);
           var x = Math.cos(lat)*Math.sin(nlat) - Math.sin(lat)*Math.cos(nlat)*Math.cos(nlng-lng);
           var bear = 360+((Math.atan2(y, x)*180)/Math.PI);
           bear=bear%360;
@@ -233,9 +317,9 @@ function bearling(lat,lng,nlat,nlng){
       else return bear-180;
     }
 
-        google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
- 
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
 <footer id="footer">
     <div class="container">
         <div class="row">
@@ -244,14 +328,7 @@ function bearling(lat,lng,nlat,nlng){
             </div>
         </div>
     </div>
-</footer>
-<!--/#footer-->
+</footer> 
 
-
-    <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/gmaps.js"></script>
-    <script type="text/javascript" src="js/wow.min.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>   
 </body>
 </html>

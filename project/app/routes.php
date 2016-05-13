@@ -54,6 +54,10 @@ Route::get('searchmap', 'LatlngController@getsearchmap');
 Route::post('searchmap/direction', 'LatlngController@getdirection');
 //Route::post('searchmap/direction', 'LatlngController@getsearchmap11');
 
+Route::get('aa', 'testController@getsearchmap');
+Route::post('aa/direction', 'testController@getsearchmap11');
+//Route::post('searchmap/direction', 'LatlngController@getsearchmap11');
+
 Route::get('/map','UserController@getmap');
 
 Route::get('/video', function()

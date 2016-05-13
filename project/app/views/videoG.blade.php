@@ -97,13 +97,7 @@
                 <div class="row">
                 <ul class="list-unstyled video-list-thumbs row">
                     <li class="col-lg-6 col-sm-4 col-xs-6">
-                         <object width='500' height='400'>
-                            <param name='movie' value='http://www.youtube.com/v/B6ftQw4ucGk'></param>
-                            <param name='wmode' value='transparent'></param>
-                            <embed src='http://www.youtube.com/v/B6ftQw4ucGk' type='application/x-shockwave-flash' wmode='transparent' width='500' height='400'>
-                            </embed>
-                            </object>
-                            <h2><a href="https://www.youtube.com/watch?v=B6ftQw4ucGk-I&feature=youtu.be">KMITL - ลาดกระบัง</a></h2>
+                            <iframe width="560" height="315" src="https://www.youtube.com/embed/BF-NYtW615s?list=PLnIqWsVXbFZ_4tSmtR8DCSFrj85MdFWCQ" frameborder="0" allowfullscreen></iframe>
                     </li> 
                 </ul>
             </div>

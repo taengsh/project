@@ -64,14 +64,6 @@
                         @endif                 
                     </ul>
                 </div>
-                <div class="search">
-                    <form role="form">
-                        <i class="fa fa-search"></i>
-                        <div class="field-toggle">
-                            <input type="text" class="search-form" autocomplete="off" placeholder="Search">
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
     </header>
@@ -90,6 +82,8 @@
    </section>
     <!--/#action-->
 
+
+
     <div class="container-fluid">
         <div class="container">
             <div class = "col-md-7">
@@ -98,12 +92,7 @@
                 <ul class="list-unstyled video-list-thumbs row">
                     <li class="col-lg-6 col-sm-4 col-xs-6">
                         <object width='500' height='400'>
-                            <param name='movie' value='http://www.youtube.com/v/B6ftQw4ucGk'></param>
-                            <param name='wmode' value='transparent'></param>
-                            <embed src='http://www.youtube.com/v/B6ftQw4ucGk' type='application/x-shockwave-flash' wmode='transparent' width='500' height='400'>
-                            </embed>
-                            </object>
-                            <h2><a href="https://www.youtube.com/watch?v=B6ftQw4ucGk-I&feature=youtu.be">KMITL - ลาดกระบัง</a></h2>
+                            <iframe width="560" height="315" src='{{$linkEmbed}}' frameborder="0" allowfullscreen></iframe>
                     </li> 
                 </ul>
             </div>
@@ -111,10 +100,10 @@
             </div>
             <div class = "col-md-3">
                 <div class="text-left">
-                    <b><h3> Origin : KMITL </h3>
+                    <b><h3> Origin : {{$start}} </h3>
                 </div>
                 <div class="text-left">
-                    <h3> Destination : ลาดกระบัง </h3>
+                    <h3> Destination : {{$end}} </h3>
                 </div>
                 <br>
                 <div class="form-group">

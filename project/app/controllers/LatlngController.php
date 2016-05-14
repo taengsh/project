@@ -6,7 +6,7 @@ class LatlngController extends BaseController
     public function getsearchmap()
     {
         //return View::make('nurse');
-       return View::make('latlng');
+       return View::make('12');
     }
      
      public function getsearchmap1()
@@ -38,7 +38,7 @@ class LatlngController extends BaseController
 
 
 
-    public function createPlaylist($arrayPlaylist){
+    public function createPlaylist($arrayPlaylist,$start,$end){
    // session_start();
    
     $OAUTH2_CLIENT_ID = '1099096092113-fjp7osplt9u776bhqignu5mtkardat8c.apps.googleusercontent.com';
@@ -85,7 +85,7 @@ class LatlngController extends BaseController
       // channel and adds a video to the playlist.
       // 1. Create the snippet for the playlist. Set its title and description.
       $playlistSnippet = new Google_Service_YouTube_PlaylistSnippet();
-      $playlistSnippet->setTitle('groupKMITLtoลาดกระบังtesteieieieieieiei');
+      $playlistSnippet->setTitle('group'.$start.'to'.$end.'Playlist');//('groupKMITLtoกิ่งแก้ว22Playlist');
       $playlistSnippet->setDescription('A private playlist created with the YouTube API v3');
 
       // 2. Define the playlist's status.
@@ -144,8 +144,22 @@ class LatlngController extends BaseController
 
       $playlist [] = array("video" => $playlistId,);
       $out3 = array_values($playlist);
+      //$out3 = implode("", $out3);
+
      /////// //echo json_encode(array($out,$out2,$out3));
        echo json_encode(array($out3));
+
+       $findBigvdo = new search();
+       $findBigvdoED = $findBigvdo->searchBigPlaylistkey($playlistId);
+        if(strcmp($findBigvdoED,$playlistId)){
+
+       $vdoList = new vdoEloquent();
+       $vdoList->start = $start;
+       $vdoList->end = $end;
+       $vdoList->playlistLinkEmbed = "https://www.youtube.com/embed/".$arrayPlaylist[0]."?list=".$playlistId;
+       $vdoList->playlistKey = $playlistId;
+       $vdoList->save();
+        }
 
      return $out3;
     }
@@ -156,6 +170,9 @@ class LatlngController extends BaseController
           session_start();
           $objstart = Input::get('origin');
           $objend = Input::get('destination');
+          $objstart = str_replace(' ','',$objstart);
+          $objend = str_replace(' ','',$objend);
+
 
           $namelatlng = '';
           $chklatlng = new search();
@@ -166,44 +183,17 @@ class LatlngController extends BaseController
          $nameStEn=$objstart.$objend;
 
           $addLatlng  = new LatlngEloquent();
-          $addLatlng ->start   = Input::get('origin');
-          $addLatlng ->end     = Input::get('destination');
+          $addLatlng ->start   = $objstart;
+          $addLatlng ->end     = $objend;
           $addLatlng ->headingAll    = Input::get('member1');
           $addLatlng ->coordinate    = Input::get('member');
-          
-          if (!strcmp($namelatlng,$nameStEn)){
-             //   var_dump("GO To find VDO");
-
-        /*********************************************************************************/
-        /**           this for chk VDO on youtube by devide latlng  10 point            **/
-        /**           if match every point then show link from youtube                  **/
-        /**           else to process another at downstair                              **/
-        /*********************************************************************************/
-
-              $findKEYfirstTime = new search();
-              $findKEYfirstTimeed = $findKEYfirstTime->searchkeyFromYoutubeByStEn($objstart,$objend);
-              var_dump("----KEY-AT-FIRST-TIME-----");
-              var_dump($findKEYfirstTimeed);
-              var_dump("---------------------------------------------------------------------");
-              $KTY=$this->createPlaylist($findKEYfirstTimeed);
-              var_dump($KTY);
-              var_dump("After playlist");
-
-          }
-          else{ // cover all process to upload then find vdo again
 
 
-             var_dump("SAVE new");
-            $addLatlng->save();
-          
-          //not have path in DB---> save//startplace.endplace
 
 
-          /********************************************************************************************/
-          /**start process-----get data from DBlatlng ----> data to DBpic  ------->data to DBgrouppic**/ 
-          
-          /********************************************************************************************/
-            
+          /**************************************************************************/
+          /***                             variable                               ***/
+
             /**Variable for Image part**/ 
             chdir('assets');//cheng folder to play evryTh in assets
             $size=array("0","60","90","120","150");
@@ -237,11 +227,50 @@ class LatlngController extends BaseController
           $ll = count($array);
 
 
+          $findBigPlaylistFirstTime = new search();
+          $findBigPlaylistFirstTimeED = $findBigPlaylistFirstTime->searchBigPlaylistbyStEn($objstart,$objend);
+
+
+          
+          if (!strcmp($findBigPlaylistFirstTimeED,$nameStEn)){ // if  have route in playlist available onyoutube  if (!strcmp($findBigPlaylistFirstTimeED,$nameStEn))
+             //   var_dump("GO To find VDO");
+
+        /*********************************************************************************/
+        /**           this for chk VDO on youtube by devide latlng  10 point            **/
+        /**           if match every point then show link from youtube                  **/
+        /**           else to process another at downstair                              **/
+        /*********************************************************************************/
+              $findvdoFirsttime = new search();
+              $findvdoFirsttimeED=$findvdoFirsttime->searchBigPlaylist($objstart,$objend);
+
+              //var_dump("-------------first IF-----------------".$findvdoFirsttimeED."---------------------------------------");
+              //$KTY=$this->createPlaylist($findKEYfirstTimeed);
+              //var_dump($KTY);
+              //var_dump("After playlist");
+          //return View::make('video')->with(array('linkEmbed'=>$findvdoFirsttimeED));
+               return View::make('video')->with(array('linkEmbed'=>$findvdoFirsttimeED,'start'=>Input::get('origin'),'end'=>Input::get('destination')));
+           
+          }
+
+        else { // cover all process to upload then find vdo again 
+        
+
+          
+          if (strcmp($namelatlng,$nameStEn)){// if not have route in latlng  if (strcmp($namelatlng,$nameStEn))
+
+            var_dump("SAVE new");
+            $addLatlng->save();
+
+          }
+          /********************************************************************************************/
+          /**start process-----get data from DBlatlng ----> data to DBpic  ------->data to DBgrouppic**/ 
+          
+          /********************************************************************************************/
 
            /**forloop-----get data from DBlatlng ----> data to DBpic  ------->data to DBgrouppic**/ 
           for($i = 0; $i<$ll-1; $i++){
               $arrayh[$i]= $arrayh[$i+1]; //NULL at first heading must move 
-                  if($i==0){
+                 if($i==0){
                           $array[$i]= substr($array[$i],1);
                           //var_dump($array[$i]);
                   }
@@ -320,7 +349,7 @@ class LatlngController extends BaseController
                               
                               $grouppicImg->picImage= $namepicImg;
                               $grouppicImg->save();
-                             var_dump("-----".$picAfimg."saveeeeeeeeee".$incImg);
+                             //var_dump("-----".$picAfimg."saveeeeeeeeee".$incImg);
                             }
     
                             $incImg+=1;
@@ -429,18 +458,18 @@ class LatlngController extends BaseController
                      $sublink->latlngStart = str_replace(' ','',$array[$NumStart]);//beacz have space to replace;
                      if($NumStart==$numFirstoflastGroup){
                       $sublink->latlngEnd = str_replace(' ','',$array[$NumStart+$Numtotal]);
-                      var_dump("++------------lastloop++");
-                      var_dump($NumStart+$Numtotal);
+                     // var_dump("++------------lastloop++");
+                     // var_dump($NumStart+$Numtotal);
                      }
                      else{
-                     var_dump("++another++");
-                     var_dump($NumStart);
+                    // var_dump("++another++");
+                    // var_dump($NumStart);
                       $sublink->latlngEnd = str_replace(' ','',$array[$NumStart+9]);
                       }
                      
                      $NumStart+=10;
 
-                    var_dump("--------------------------------------------".$j."------------------------------------------------------".$numFirstoflastGroup);
+                    var_dump("--------------------------------------------".$j."------------------------------------------------------");
                     $findvdo = new search;
                     $findvdoED=$findvdo->searchlinkVdobylinkVdoFromLinkVDO($sublink->linkVDO);
                      
@@ -460,7 +489,6 @@ class LatlngController extends BaseController
         /****************************************************/
         /**                    MAKE YOUTUBE               ***/
         /****************************************************/
-        
         //**variable for VDO latlngStart latlngEND**/
         $numSS=0;
         $numFirstoflastGroupVDO = ($ll-(($ll-1)%10))-1;//90
@@ -519,10 +547,6 @@ class LatlngController extends BaseController
           $findvdotoUpED=$findvdotoUp->searchsubvdoByStEn($objstart,$objend);
           $numVDO = count($findvdotoUpED);
 
-
-          
-      
-
           for($a=0;$a<$numVDO;$a++){
 
               $videoPath = $findvdotoUpED[$a];
@@ -530,7 +554,7 @@ class LatlngController extends BaseController
               $findPathvdo = new search();
               $findPathvdoED = $findPathvdo->searchpathvdoFromServInplaylistVDO($videoPath);
 
-              /***chk VDO in YOUTUBE****/
+              /***chk VDO in YOUTUBE prevent upload multiple vdo****/
               if(strcmp($videoPath,$findPathvdoED)){
               //$videoPath =implode(" ",$findvdotoUpED);
               $title = "VDO".$findvdotoUpED[$a];
@@ -614,20 +638,15 @@ class LatlngController extends BaseController
                 $youtubeDB = new playlistVDOEloquent();
                 $youtubeDB->start = $objstart;
                 $youtubeDB->end = $objend;
-                $youtubeDB->latlngStart=str_replace(' ','',$array[$numSS]);
 
-                if($numSS==$numFirstoflastGroupVDO){
-                      $youtubeDB->latlngEnd = str_replace(' ','',$array[$numSS+$NumtotalVDO]);
-                      //var_dump("++------------lastloop++");
-                     // var_dump($NumStart+$Numtotal);
-                }
-                
-                else{
-                     // var_dump("++another++");
-                     //var_dump($NumStart);
-                      $youtubeDB->latlngEnd = str_replace(' ','',$array[$numSS+9]);
-                }
-                
+                $st = new search();
+                $stED = $st->searchStgroup($findvdotoUpED[$a]);
+                $youtubeDB->latlngStart= $stED;
+
+                $enn = new search();
+                $ennED = $enn->searchEndgroup($findvdotoUpED[$a]);
+                $youtubeDB->latlngEnd = $ennED;
+                     
                 $youtubeDB->namevdoServ=$findvdotoUpED[$a];
                 $youtubeDB->linkPlaylist="https://www.youtube.com/watch?v=".$status['id'];
                 $youtubeDB->idLink = $status['id'];
@@ -637,7 +656,7 @@ class LatlngController extends BaseController
 
                 if(strcmp($youtubeDB->linkPlaylist,$linkyoutubeED)){
                   $youtubeDB->save();
-                  var_dump("my YOUTUBE".$youtubeDB->linkPlaylist."------------------------------------");
+                  //var_dump("my YOUTUBE".$youtubeDB->linkPlaylist."------------------------------------");
 
 
                 }
@@ -680,17 +699,62 @@ class LatlngController extends BaseController
 
 
 
-
         /******************************************************************************************/
         /***this process get route start-end devine to group -> find linkyoutube FROM playlistVDO**/
         /***                     to order RIGHT VDO ROUTING -> SHOW VDO                         ***/
       
 
+        $numFirstoflastMkPlaylist = ($ll-(($ll-1)%10))-1;//90
+        $NumtotalMkPlaylist = ($ll-2)%10;//8
+
+        $strKey='';
+
+         for($z = 0; $z<$ll-1; $z++){
+             $startppP = str_replace(' ','',$array[$z]);
+
+                if($z==$numFirstoflastMkPlaylist){
+                      $endppP =  str_replace(' ','',$array[$z+$NumtotalMkPlaylist]);
+                      $z+=$startppP+$NumtotalMkPlaylist;
+                      var_dump("++------------lastloop++");
+                      var_dump($startppP);
+                      var_dump("++endpoint++");
+                      var_dump($endppP);
+                }
+
+                else{
+                      $endppP = str_replace(' ','',$array[$z+9]);
+                      $z+=9;
+                      var_dump("++another++");
+                      var_dump($startppP);
+                      var_dump("++endpoint++");
+                      var_dump($endppP);
+                }
+
+
               $findKEY = new search();
-              $findKEYed = $findKEY->searchkeyFromYoutubeByStEn($objstart,$objend);
-              var_dump("----KEY---");
-              var_dump($findKEYed);
-              var_dump("---------------------------------------------------------------------");
+              $findKEYed = $findKEY->searchkeyFromYoutube($startppP,$endppP);
+              $strKey.= $findKEYed;//concat get strkey
+              var_dump("KEYYYYYYYYYYYYY");
+             var_dump($findKEYed);
+         }
+
+          /**************************************************************************/
+          /**                        function to createPlaylist                   ***/
+           /*************************************************************************/
+
+         $arrayKey = str_split($strKey,11);
+
+         var_dump("+++++++++++++++++++++++++++++++ function to createPlaylist  ++++++++++++++++++++++++++++++++++++");
+
+         var_dump($arrayKey);
+         $KTY=$this->createPlaylist($arrayKey,$objstart,$objend);
+          var_dump($KTY);
+          var_dump("After playlist");
+
+        // return Redirect::to('/video');
+          return View::make('video')->with(array('linkEmbed'=>$KTY,'start'=>Input::get('origin'),'end'=>Input::get('destination')));
+       
+
 
 
          

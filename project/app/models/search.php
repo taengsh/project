@@ -215,8 +215,8 @@
 			}
 
 			public static function searchvdofromLinkVDO($latS,$latE){
-			$data=linkVDOEloquent::where('latlngStart','LIKE',"%".$latS."%");
-			$data=$data->where('latlngEnd','LIKE',"%".$latE."%");
+			$data=SubLinkVDOEloquent::where('latlngStart','LIKE',$latS);
+			$data=$data->where('latlngEnd','LIKE',$latE);
 			$data=$data->get();
 
 			$outputGroup=array();
@@ -224,10 +224,39 @@
 					for ($a=0;$a<$size;$a++) {
 						$outputGroup[$a]=$data[$a]->linkVDO;
 				}
+				//$outputGroup = implode($outputGroup);
+				//var_dump($outputGroup);
+			return $outputGroup;
+			}
+			/****find start pointOfGroup from linkVDOdb***/
+			public static function searchStgroup($linkV){
+			$data=SubLinkVDOEloquent::where('linkVDO','LIKE',$linkV);
+			$data=$data->get();
+
+			$outputGroup=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputGroup[$a]=$data[$a]->latlngStart;
+				}
 				$outputGroup = implode($outputGroup);
 				//var_dump($outputGroup);
 			return $outputGroup;
 			}
+			/****find end pointOfGroup from linkVDOdb***/
+			public static function searchEndgroup($linkV){
+			$data=SubLinkVDOEloquent::where('linkVDO','LIKE',$linkV);
+			$data=$data->get();
+
+			$outputGroup=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputGroup[$a]=$data[$a]->latlngEnd;
+				}
+				$outputGroup = implode($outputGroup);
+				//var_dump($outputGroup);
+			return $outputGroup;
+			}
+
 
 			/****find path VDO from playlistVDO paramet is path vdo(namevdoserv)*****/
 			public static function searchpathvdoFromServInplaylistVDO($path){
@@ -285,10 +314,78 @@
 					for ($a=0;$a<$size;$a++) {
 						$outputGroup[$a]=$data[$a]->idLink;
 				}
-				//$outputGroup = implode($outputGroup);
+				$outputGroup = implode($outputGroup);
 				//var_dump($outputGroup);
 			return $outputGroup;
 			}
+
+			public static function searchkeyFromYoutubePrevent($startP,$endP){
+			$data=playlistVDOEloquent::where('start','LIKE',$startP);
+			$data=$data->where('end','LIKE',$endP);
+			$data=$data->get();
+
+			$outputGroup=array();
+			//$size=count($data);
+					for ($a=0;$a<1;$a++) {
+						$outputGroup1[$a]=$data[$a]->start;
+						$outputGroup2[$a]=$data[$a]->end;
+				}
+				$outputGroup1 = implode($outputGroup1);
+				$outputGroup2 = implode($outputGroup2);
+				//var_dump($outputGroup);
+			return $outputGroup1.$outputGroup2;
+			}
+
+
+
+
+			public static function searchBigPlaylist($startP,$endP){
+			$data=vdoEloquent::where('start','LIKE',$startP);
+			$data=$data->where('end','LIKE',$endP);
+			$data=$data->get();
+
+			$outputGroup=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputGroup[$a]=$data[$a]->playlistLinkEmbed;
+				}
+				$outputGroup = implode($outputGroup);
+				//var_dump($outputGroup);
+			return $outputGroup;
+			}
+
+			public static function searchBigPlaylistbyStEn($startP,$endP){
+			$data=vdoEloquent::where('start','LIKE',$startP);
+			$data=$data->where('end','LIKE',$endP);
+			$data=$data->get();
+
+			$outputGroup=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputGroup[$a]=$data[$a]->start;
+						$outputGroup2[$a]=$data[$a]->end;
+				}
+				$outputGroup = implode($outputGroup);
+				$outputGroup2 = implode($outputGroup2);
+				//var_dump($outputGroup);
+			return $outputGroup.$outputGroup2;
+			}
+
+			public static function searchBigPlaylistkey($kkey){
+			$data=vdoEloquent::where('playlistKey','LIKE',$kkey);
+			$data=$data->get();
+
+			$outputGroup=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputGroup[$a]=$data[$a]->playlistKey;
+				}
+				$outputGroup = implode($outputGroup);
+				//var_dump($outputGroup);
+			return $outputGroup;
+			}
+
+
 
 
 

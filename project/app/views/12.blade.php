@@ -19,7 +19,7 @@
         <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
     <style>
     html, body, #map-canvas { height: 100%; min-height: 300px; min-width: 300px; margin: 0 auto; padding: 0px }
-    #map-canvas { height: 450px; width: 600px; }
+    #map-canvas { height: 450px; width: 550px; }
     
     </style>
    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script> 
@@ -77,8 +77,39 @@
             </div>
         </div>
     </section>
+    <br><br>
+    <form action="{{url('searchmap/direction')}}" method="post" files="true" class="form-register" id="formRoute">
+          <div id="container">
+          </div>
+          <div class = "col-md-1">
+          </div>
+          <div class = "col-md-5">
+                  <div id="map-canvas"></div>
+                  <div id="vertex-container">
+                    <ul type="text" name="vertex" id="vertex" class="form-control input-sm" value="" ></ul>
+                  </div>
+          </div>
 
-  <form action="{{url('searchmap/direction')}}" method="post" files="true" class="form-register" id="formRoute">
+          <div class = "col-md-4">
+            <div class="panel"><center>
+                <label>Origin
+                  <input type="text" name="origin" id="origin" class="form-control input-sm" value="">
+                </label>&nbsp&nbsp&nbsp&nbsp
+                <label>Destination
+                  <input type="text" name="destination" id="destination" class="form-control input-sm" value="">
+               </label>
+               <label>Create&nbsp&nbspVideo&nbsp&nbsp:&nbsp&nbsp
+                  <input type="button" value="Video" class="btn btn-success" onclick="calcRoute()">
+               </label>    
+          </div></center>
+    </form> 
+          <center><label>Create&nbsp&nbspRoute&nbsp&nbsp:&nbsp&nbsp 
+                  <input type="button" value="Route" class="btn btn-primary" onclick="calcRoute1()">
+          </label></center>   
+
+
+
+  <!--<form action="{{url('aa/direction')}}" method="post" files="true" class="form-register" id="formRoute">
         <div id="container">
         </div>
         <div id="panel"><center>
@@ -97,8 +128,7 @@
     </ul>
 </div>
 </form> 
-
-<input type="button" value="Create Route"  onclick="calcRoute1()">
+<input type="button" value="Create Route"  onclick="calcRoute1()">-->
 
 <script type="text/javascript">
 var directionsDisplay;
@@ -288,14 +318,5 @@ function bearling(lat,lng,nlat,nlng){
 google.maps.event.addDomListener(window, 'load', initialize);
 </script>
 
-<footer id="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12 text-center bottom-separator">
-                <img src="images/home/under.png" class="img-responsive inline" alt="">
-            </div>
-        </div>
-    </div>
-</footer>  
 </body>
 </html>

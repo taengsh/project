@@ -90,7 +90,7 @@ Route::get('/render','rendervdoController@getrender');
 
 Route::get('/maproute', function()
 {
-    return View::make('latlngNSC');
+    return View::make('12');
 });
 
 //Route::get('testyoutube','testyoutubeController@getindexweb');

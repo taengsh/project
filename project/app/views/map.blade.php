@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="project">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,7 +29,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     </head><!--/head-->
 
-    <body ng-controller="ProjectController as project">
+    <body>
                <header id="header">      
 
         <div class="navbar navbar-inverse" role="banner">
@@ -68,14 +68,6 @@
                         @endif                 
                     </ul>
                 </div>
-                <div class="search">
-                    <form role="form">
-                        <i class="fa fa-search"></i>
-                        <div class="field-toggle">
-                            <input type="text" class="search-form" autocomplete="off" placeholder="Search">
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
     </header>
@@ -104,19 +96,16 @@
             <div class = "col-md-9">
                 <div id="map-canvas"></div>
             </div>
-            <form action = "{{url('aa/direction')}}" method="post" files="true" class="form-register" id="formRoute">
             <div class = "col-md-3">
               <br><br><br><br><br>
               <div class="form-group">
-                  <input id="origin" ng-model="project.name" name="origin" type="text" class="form-control" placeholder="origin" value="">
+                  <input id="origin" name="origin" type="text" class="form-control" placeholder="origin" value="">
               </div>
-              <span ng-if="done()"></span>
               <div class="form-group">
-                  <input id="destination" ng-model="project.destination" name="destination" type="text" class="form-control" placeholder="destination" value="">
+                  <input id="destination" name="destination" type="text" class="form-control" placeholder="destination" value="">
               </div>
-                  <input type="submit" class="btn btn-success btn-block btn-lg" value="Create" onclick="calcRoute()">
+                  <input type="submit" class="btn btn-success btn-block btn-lg" value="Create Route" onclick="calcRoute()">
             </div>
-            </form> 
     
 
     <script type="text/javascript">
@@ -254,7 +243,5 @@ function bearling(lat,lng,nlat,nlng){
     <script type="text/javascript" src="js/gmaps.js"></script>
     <script type="text/javascript" src="js/wow.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>   
-    <!--<script type="text/javascript" src="js/angular.min.js"></script>
-    <script type="text/javascript" src="js/calcRoute.js"></script>  -->
 </body>
 </html>

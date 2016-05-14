@@ -360,6 +360,7 @@
 			$data=$data->get();
 
 			$outputGroup=array();
+			$outputGroup2=array();
 			$size=count($data);
 					for ($a=0;$a<$size;$a++) {
 						$outputGroup[$a]=$data[$a]->start;

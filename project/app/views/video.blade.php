@@ -6,13 +6,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>Contact Us | Triangle</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/font-awesome.min.css" rel="stylesheet">
-    <link href="css/prettyPhoto.css" rel="stylesheet"> 
-    <link href="css/animate.min.css" rel="stylesheet"> 
-    <link href="css/main.css" rel="stylesheet">
-    <link href="css/responsive.css" rel="stylesheet">
-    <link href="css/video.css" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prettyPhoto.css" rel="stylesheet"> 
+    <link href="../css/animate.min.css" rel="stylesheet"> 
+    <link href="../css/main.css" rel="stylesheet">
+    <link href="../css/responsive.css" rel="stylesheet">
+    <link href="../css/video.css" rel="stylesheet">
 
     <!--[if lt IE 9]>
         <script src="js/html5shiv.js"></script>
@@ -84,36 +84,34 @@
 
 
 
-    <div class="container-fluid">
-        <div class="container">
-            <div class = "col-md-7">
-                <div class="container">
+<div class="container-fluid">
+    <div class="container">
+        <div class = "col-md-8">
+            <div class="container">
                 <div class="row">
-                <ul class="list-unstyled video-list-thumbs row">
-                    <li class="col-lg-6 col-sm-4 col-xs-6">
-                        <object width='500' height='400'>
-                            <iframe width="560" height="315" src='{{$linkEmbed}}' frameborder="0" allowfullscreen></iframe>
-                    </li> 
-                </ul>
+                    <ul class="list-unstyled video-list-thumbs row">
+                        <li class="col-lg-6 col-sm-6 col-xs-6">
+                                <iframe width="560" height="315" src='{{$linkEmbed}}' frameborder="0" allowfullscreen></iframe>
+                        </li> 
+                    </ul>
+                </div>
             </div>
         </div>
+        <div class = "col-md-4">
+            <div class="text-left">
+                <b><h3> Origin : {{$start}} </h3>
             </div>
-            <div class = "col-md-3">
-                <div class="text-left">
-                    <b><h3> Origin : {{$start}} </h3>
-                </div>
-                <div class="text-left">
-                    <h3> Destination : {{$end}} </h3>
-                </div>
+            <div class="text-left">
+                <h3> Destination : {{$end}} </h3>
+            </div>
                 <br>
-                <div class="form-group">
-                    <a href="/project/public/profile" class="btn btn-common">Save Direction</a>
-                    <!--input type="submit" name="submit" class="btn btn-submit" value="Save Direction"-->
-                </div>
-                
-            </div>
+            <div class="form-group">
+                <a href="/project/public/profile" class="btn btn-common">Save Direction</a>
+                <!--input type="submit" name="submit" class="btn btn-submit" value="Save Direction"-->
+            </div> 
         </div>
     </div>
+</div>
     <br><br>
 
 

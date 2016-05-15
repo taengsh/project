@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Contact Us | Triangle</title>
+    <title>Video</title>
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/font-awesome.min.css" rel="stylesheet">
     <link href="../css/prettyPhoto.css" rel="stylesheet"> 
@@ -49,7 +49,7 @@
                                 @if(Auth::guest())
                                     <li><a href="/project/public/map">Direction</a></li>
                                     @else
-                                    <li><a href="/project/public/maproute">Direction</a></li>
+                                    <li><a href="/project/public/searchmap">Direction</a></li>
                                     @endif  
                                 <li><a href="/project/public/searchvideo">Video</a></li>
                             </ul>
@@ -74,7 +74,9 @@
              <div class="container">
                 <div class="row">
                     <div class="action">
-                                               
+                          <div class="col-sm-12">
+                            <h1 class="title">Video Direction...</h1>
+                        </div>                      
                     </div>
                 </div>
             </div>
@@ -97,6 +99,7 @@
                 </div>
             </div>
         </div>
+<form action="{{url('savevideo')}}" method="post" files="true" class="form-register">
         <div class = "col-md-4">
             <div class="text-left">
                 <b><h3> Origin : {{$start}} </h3>
@@ -104,13 +107,14 @@
             <div class="text-left">
                 <h3> Destination : {{$end}} </h3>
             </div>
-                <br>
-            <div class="form-group">
-                <a href="/project/public/profile" class="btn btn-common">Save Direction</a>
-                <!--input type="submit" name="submit" class="btn btn-submit" value="Save Direction"-->
-            </div> 
+            <br>
+                <input type="hidden" name="start" value={{$start}}>
+                <input type="hidden" name="end" value={{$end}}>
+                <input type="hidden" name="link" value={{$linkEmbed}}>
+                <input type="submit" value="Save Direction" class="btn btn-success">
         </div>
-    </div>
+</form>
+
 </div>
     <br><br>
 

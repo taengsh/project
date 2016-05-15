@@ -48,7 +48,7 @@
                                 @if(Auth::guest())
                                     <li><a href="/project/public/map">Direction</a></li>
                                     @else
-                                    <li><a href="/project/public/maproute">Direction</a></li>
+                                    <li><a href="/project/public/searchmap">Direction</a></li>
                                     @endif  
                                 <li><a href="/project/public/searchvideo">Video</a></li>
                             </ul>

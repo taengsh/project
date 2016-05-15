@@ -48,7 +48,7 @@
                                 @if(Auth::guest())
                                     <li><a href="/project/public/map">Direction</a></li>
                                     @else
-                                    <li><a href="/project/public/maproute">Direction</a></li>
+                                    <li><a href="/project/public/searchmap">Direction</a></li>
                                     @endif  
                                 <li><a href="/project/public/searchvideo">Video</a></li>
                             </ul>
@@ -107,11 +107,12 @@
                                   <table class="table table-user-information">
                                     <tbody>
                                       <h3>Your Direction...</h3>
-                                      <tr>
-                                        <td>KMITL - ลาดกระบัง</td>
-                                        <td><a href="/project/public/videoG"</a><i class="fa fa-video-camera"></i></i></td>
-                                    </tr>
-
+                                            @for ($i=0; $i <count($searchstart) ; $i++)
+                                            <tr>
+                                                <td> {{$searchstart[$i]}} - {{$searchend[$i]}} </td>
+                                            </tr>
+                                            <td><iframe width="500" height="300" src="{{$searchlink[$i]}}" frameborder="0" allowfullscreen></iframe></td>
+                                            @endfor
                                 </tbody>
                             </table>
                         </div>

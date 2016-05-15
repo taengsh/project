@@ -230,25 +230,23 @@ class LatlngController extends BaseController
           $findBigPlaylistFirstTime = new search();
           $findBigPlaylistFirstTimeED = $findBigPlaylistFirstTime->searchBigPlaylistbyStEn($objstart,$objend);
 
+          if($ll>=300){
+              echo '<script type="text/javascript">alert("It works.");</script>';
+               return Redirect::to('/searchmap');
+          }
+              
+
 
           
-          if (!strcmp($findBigPlaylistFirstTimeED,$nameStEn)){ // if  have route in playlist available onyoutube  if (!strcmp($findBigPlaylistFirstTimeED,$nameStEn))
+         if (!strcmp($findBigPlaylistFirstTimeED,$nameStEn)){ // if  have route in playlist available onyoutube  if (!strcmp($findBigPlaylistFirstTimeED,$nameStEn))
              //   var_dump("GO To find VDO");
 
         /*********************************************************************************/
-        /**           this for chk VDO on youtube by devide latlng  10 point            **/
-        /**           if match every point then show link from youtube                  **/
-        /**           else to process another at downstair                              **/
+        /**                          find PLAYLISTvdo on youtube                        **/
         /*********************************************************************************/
-              $findvdoFirsttime = new search();
-              $findvdoFirsttimeED=$findvdoFirsttime->searchBigPlaylist($objstart,$objend);
-
-              //var_dump("-------------first IF-----------------".$findvdoFirsttimeED."---------------------------------------");
-              //$KTY=$this->createPlaylist($findKEYfirstTimeed);
-              //var_dump($KTY);
-              //var_dump("After playlist");
-          //return View::make('video')->with(array('linkEmbed'=>$findvdoFirsttimeED));
-               return View::make('video')->with(array('linkEmbed'=>$findvdoFirsttimeED,'start'=>Input::get('origin'),'end'=>Input::get('destination')));
+          $findvdoFirsttime = new search();
+          $findvdoFirsttimeED=$findvdoFirsttime->searchBigPlaylist($objstart,$objend);
+        return View::make('video')->with(array('linkEmbed'=>$findvdoFirsttimeED,'start'=>Input::get('origin'),'end'=>Input::get('destination')));
            
           }
 
@@ -257,10 +255,10 @@ class LatlngController extends BaseController
 
           
           if (strcmp($namelatlng,$nameStEn)){// if not have route in latlng  if (strcmp($namelatlng,$nameStEn))
-
-          //  var_dump("SAVE new");
-            $addLatlng->save();
-
+              
+                 var_dump("save eiei");
+                 $addLatlng->save();//SAVE new latlng
+                
           }
           /********************************************************************************************/
           /**start process-----get data from DBlatlng ----> data to DBpic  ------->data to DBgrouppic**/ 
@@ -298,11 +296,8 @@ class LatlngController extends BaseController
               plese change Algorithm compare latlng,heading of latlngDB and picDB**/
         
             if (strcmp($img,$searchPic)){
-                  //var_dump("++++++++".$img);
-                 //var_dump("===========================");
-                 // var_dump($searchPic."++++++++++");
-             
-                file_put_contents($img,file_get_contents($image));
+                 
+               file_put_contents($img,file_get_contents($image));
                 $addPic->namelink = $image;
                 $addPic->pic = $img;
                 $addPic->save();          

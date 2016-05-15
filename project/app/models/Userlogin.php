@@ -5,6 +5,10 @@
 		private $surname;
 		private $password;
 		private $email;	
+		private $start;	
+		private $end;	
+		private $userid;	
+		private $playlist;	
 	
 		public function getid(){
 			return $this->id;
@@ -21,6 +25,18 @@
 		public function getemail(){
 			return $this->email;
 		}
+		public function getstart(){
+			return $this->start;
+		}
+		public function getend(){
+			return $this->end;
+		}
+		public function getuserid(){
+			return $this->userid;
+		}
+		public function getplaylist(){
+			return $this->playlist;
+		}
 
 		public function setname($value){
 			$this->name=$value;
@@ -33,6 +49,18 @@
 		}
 		public function setemail($value){
 			$this->email=$value;
+		}
+		public function setstart($value){
+			$this->start=$value;
+		}
+		public function setend($value){
+			$this->end=$value;
+		}
+		public function setuserid($value){
+			$this->userid=$value;
+		}
+		public function setplaylist($value){
+			$this->playlist=$value;
 		}
 
 		public function newUserlogin(){
@@ -67,6 +95,16 @@
 
 		return $obj;
 		}
+
+		public function usersaveVDO(){
+			$new=new saveVideoEloquent;
+			$new->userid=$this->userid;
+			$new->start=$this->start;
+			$new->end=$this->end;
+			$new->playlist=$this->playlist;
+			$new->save();
+		}
+
 	}	
 
 ?>

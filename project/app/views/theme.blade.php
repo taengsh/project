@@ -49,7 +49,7 @@
                                 @if(Auth::guest())
                                     <li><a href="/project/public/map">Direction</a></li>
                                     @else
-                                    <li><a href="/project/public/maproute">Direction</a></li>
+                                    <li><a href="/project/public/searchmap">Direction</a></li>
                                     @endif  
                                 <li><a href="/project/public/searchvideo">Video</a></li>
                             </ul>
@@ -103,32 +103,16 @@
             <div class="row">
                 <ul class="list-unstyled video-list-thumbs row">
                     <li class="col-lg-4 col-sm-4 col-xs-6">
-                            <object width='350' height='250'>
-                            <param name='movie' value='http://www.youtube.com/v/B6ftQw4ucGk'></param>
-                            <param name='wmode' value='transparent'></param>
-                            <embed src='http://www.youtube.com/v/B6ftQw4ucGk' type='application/x-shockwave-flash' wmode='transparent' width='350' height='250'>
-                            </embed>
-                            </object>
-                            <h2><a href="https://www.youtube.com/watch?v=B6ftQw4ucGk-I&feature=youtu.be">KMITL - ลาดกระบัง</a></h2>
-                        
+                            <iframe width="300" height="200" src="{{$link1}}" frameborder="0" allowfullscreen></iframe>
+                            <h2>{{$name1}} - {{$end1}}</h2>  
                     </li>
                     <li class="col-lg-4 col-sm-4 col-xs-6">
-                        <object width='350' height='250'>
-                            <param name='movie' value='http://www.youtube.com/v/ssysJ3VWB-I'></param>
-                            <param name='wmode' value='transparent'></param>
-                            <embed src='http://www.youtube.com/v/ssysJ3VWB-I' type='application/x-shockwave-flash' wmode='transparent' width='350' height='250'>
-                            </embed>
-                            </object>
-                            <h2><a href="https://www.youtube.com/watch?v=ssysJ3VWB-I&feature=youtu.be">HUAMARK - SEACON</a></h2>
+                            <iframe width="300" height="200" src="{{$link2}}" frameborder="0" allowfullscreen></iframe>
+                            <h2>{{$name2}} - {{$end2}}</h2>
                     </li>
                     <li class="col-lg-4 col-sm-4 col-xs-6">
-                        <object width='350' height='250'>
-                            <param name='movie' value='http://www.youtube.com/v/WhYV6zFY_Ys'></param>
-                            <param name='wmode' value='transparent'></param>
-                            <embed src='http://www.youtube.com/v/WhYV6zFY_Ys' type='application/x-shockwave-flash' wmode='transparent' width='350' height='250'>
-                            </embed>
-                            </object>
-                            <h2><a href="https://www.youtube.com/watch?v=WhYV6zFY_Ys&feature=youtu.be">JJmall - BTSหมอชิต</a></h2>
+                            <iframe width="300" height="200" src="{{$link3}}" frameborder="0" allowfullscreen></iframe>
+                            <h2>{{$name3}} - {{$end3}}</h2>
                     </li>
                     
                 </ul>

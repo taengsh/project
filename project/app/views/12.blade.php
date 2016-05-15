@@ -45,7 +45,7 @@
                                 @if(Auth::guest())
                                     <li><a href="/project/public/map">Direction</a></li>
                                     @else
-                                    <li><a href="/project/public/maproute">Direction</a></li>
+                                    <li><a href="/project/public/searchmap">Direction</a></li>
                                     @endif  
                                 <li><a href="/project/public/searchvideo">Video</a></li>
                             </ul>
@@ -177,7 +177,7 @@ function calcRoute1() {
                             for (var i = 0; i < points.length; i++) {
                                 var li = document.createElement('li');
                                 li.innerHTML = getLiText(points[i]);
-                                //ul.appendChild(li);
+                                ul.appendChild(li);
 //alert(points[i]);
                             }
                         }
@@ -254,7 +254,7 @@ function calcRoute() {
                                 headcal.name = "member1";
                                 headcal.id = "member1";  
                                 headcal.setAttribute('value',head);
-                                //container.appendChild(headcal);
+                                container.appendChild(headcal);
 
 
 
@@ -266,7 +266,7 @@ function calcRoute() {
                               //  input.setAttribute('value',points);
                                 input.setAttribute('value',points);
                                 //dd(pointAdd);
-                                //container.appendChild(input);  
+                                container.appendChild(input);  
                           
 
 

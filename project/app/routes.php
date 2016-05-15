@@ -48,6 +48,9 @@ Route::get('/signout',function(){
 //profile
 Route::get('/profile','UserController@getprofile');
 
+Route::post('savevideo','UserController@getsaveVDO');
+
+
 
 
 Route::get('searchmap', 'LatlngController@getsearchmap');

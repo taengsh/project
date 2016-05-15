@@ -37,28 +37,43 @@
 
 			$maxid = 0;
 			$minid = 1;
-			//$row = vdoEloquent::query('SELECT MAX(id) AS `maxid` FROM `VDO`')->row();
 			$row = vdoEloquent::orderBy('id','desc')->limit(1)->get();
 			if ($row) {
 			    $maxid = $row[0]->id; 
 			}
+				$data=vdoEloquent::find(rand( $minid , $maxid ));
+				if($data==NULL){
+					return NULL;
+				}
+				$obj=new searchVideo;
+				$obj = array(
+					'id' => $data->id ,
+					'start' => $data->start,
+					'end' => $data->end,
+					'playlistLinkEmbed' => $data->playlistLinkEmbed
+				 );
+				// $obj->id= $data->id;
+				// $obj->start=$data->start;
+				// $obj->end=$data->end;
+				// $obj->playlistLinkEmbed=$data->playlistLinkEmbed;
+				return $obj;
+				//return array($data->id,$data->start,$data->end,$data->playlistLinkEmbed);
 
-			$randomnum=array();
-			for($i=0;$i<3;$i++){
-				$randomnum[$i] = rand( $minid , $maxid );
-			}
-			
-			$data=vdoEloquent::find(4);
-			if($data==NULL){
-				return NULL;
-			}
-			$obj=new searchVideo;
-			$obj->id=$data->id;
-			$obj->start=$data->start;
-			$obj->end=$data->end;
-			$obj->playlistLinkEmbed=$data->playlistLinkEmbed;
-			return $obj;
+		}
 
+		public static function searchplaylistlinkembed($start,$end){
+			$data=vdoEloquent::where('start','LIKE',$start);
+			$data=$data->where('end','LIKE',$end);
+			$data=$data->get();
+
+			$output=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$output[$a]=$data[$a]->playlistLinkEmbed;
+				}
+				$output= implode($output);
+				//var_dump($outputGroup);
+			return $output;
 			}
 
 	}

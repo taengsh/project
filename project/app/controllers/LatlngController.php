@@ -26,7 +26,7 @@ class LatlngController extends BaseController
           $findvdotoUp=new search();
           $findvdotoUpED=$findvdotoUp->searchsubvdoByStEn($objstart,$objend);
           $numVDO = count($findvdotoUpED);
-          var_dump($findvdotoUpED);
+         // var_dump($findvdotoUpED);
     }
     public function tete($arrayPlaylist){
 
@@ -113,7 +113,7 @@ class LatlngController extends BaseController
         $sizePlay=count($arrayPlaylist);
         
           for($a=0;$a<$sizePlay;$a++){
-            var_dump($a);
+           // var_dump($a);
             $resourceId = new Google_Service_YouTube_ResourceId();
             $resourceId->setVideoId($arrayPlaylist[$a]);
             //$resourceId->setVideoId($size[$a]);
@@ -161,7 +161,7 @@ class LatlngController extends BaseController
        $vdoList->save();
         }
 
-     return $out3;
+     return $vdoList->playlistLinkEmbed;
     }
 
 
@@ -258,7 +258,7 @@ class LatlngController extends BaseController
           
           if (strcmp($namelatlng,$nameStEn)){// if not have route in latlng  if (strcmp($namelatlng,$nameStEn))
 
-            var_dump("SAVE new");
+          //  var_dump("SAVE new");
             $addLatlng->save();
 
           }
@@ -410,7 +410,7 @@ class LatlngController extends BaseController
                   **/
                   if ((strcmp($strFirstLatlng,$searchGGPicFirst))&&(strcmp($strLastLatlng,$searchGGPicLast))){
                    // var_dump("it aready have GROUP in DB");
-                    var_dump("IT not true THEN SAVE new group in DB ");
+                   // var_dump("IT not true THEN SAVE new group in DB ");
                     $grouppic->save();
 
                   }
@@ -469,7 +469,7 @@ class LatlngController extends BaseController
                      
                      $NumStart+=10;
 
-                    var_dump("--------------------------------------------".$j."------------------------------------------------------");
+                   // var_dump("--------------------------------------------".$j."------------------------------------------------------");
                     $findvdo = new search;
                     $findvdoED=$findvdo->searchlinkVdobylinkVdoFromLinkVDO($sublink->linkVDO);
                      
@@ -479,7 +479,7 @@ class LatlngController extends BaseController
                    }//end if not have vdo then save
                 }
               
-              var_dump("///////////////////////////".$j."///////////////////////");
+             // var_dump("///////////////////////////".$j."///////////////////////");
 
             }//end if chk have pic to do VDO
       
@@ -549,13 +549,33 @@ class LatlngController extends BaseController
 
           for($a=0;$a<$numVDO;$a++){
 
-              $videoPath = $findvdotoUpED[$a];
+              $videoPath = $findvdotoUpED[$a];//parameter input
+              
+              $latStartServ = new search();
+              $latStartServED = $latStartServ->searchStartPointServ($videoPath);
 
-              $findPathvdo = new search();
-              $findPathvdoED = $findPathvdo->searchpathvdoFromServInplaylistVDO($videoPath);
+              $latEndServ = new search();
+              $latEndServED = $latEndServ->searchEndPointServ($videoPath);
+
+              
+
+              $latStartYoutube = new search();
+              $latStartYoutubeED = $latStartYoutube->searchStartEndPointYoutube($latStartServED);
+
+              $latEndYoutube = new search();
+              $latEndYoutubeED = $latEndYoutube->searchEndPointYoutube($latEndServED);
+
+              $startEndserv= $latStartServED.$latEndServED;
+              $startEndYou=$latStartYoutubeED.$latEndYoutubeED;
+
+              //$findPathvdo = new search();
+              //$findPathvdoED = $findPathvdo->searchpathvdoFromServInplaylistVDO($videoPath);
 
               /***chk VDO in YOUTUBE prevent upload multiple vdo****/
-              if(strcmp($videoPath,$findPathvdoED)){
+              ////if((strcmp($latEndYoutubeED,$latEndServED))||(strcmp($latStartYoutubeED,$latStartServED))){ 
+                if(strcmp($startEndserv,$startEndYou)){
+               
+             
               //$videoPath =implode(" ",$findvdotoUpED);
               $title = "VDO".$findvdotoUpED[$a];
               
@@ -629,10 +649,10 @@ class LatlngController extends BaseController
                 // If you want to make other calls after the file upload, set setDefer back to false
                $client->setDefer(false);
 
-               echo "Video Uploaded";
-               echo sprintf('<li>%s (%s)</li>',
-                $status['snippet']['title'],
-                $status['id']);
+              // echo "Video Uploaded";
+             //  echo sprintf('<li>%s (%s)</li>',
+              //  $status['snippet']['title'],
+             //   $status['id']);
 
                 /***SAVE VDO to playlistVDO***/
                 $youtubeDB = new playlistVDOEloquent();
@@ -651,10 +671,10 @@ class LatlngController extends BaseController
                 $youtubeDB->linkPlaylist="https://www.youtube.com/watch?v=".$status['id'];
                 $youtubeDB->idLink = $status['id'];
 
-                $linkyoutube=new search();
-                $linkyoutubeED=$linkyoutube->searchlinkYoutubebynamelink($youtubeDB->linkPlaylist);
+                $linkservOnYoutubeDB=new search();
+                $linkservOnYoutubeDBED=$linkservOnYoutubeDB->searchNameServbynameServe($youtubeDB->namevdoServ);
 
-                if(strcmp($youtubeDB->linkPlaylist,$linkyoutubeED)){
+                if(strcmp($youtubeDB->namevdoServ,$linkservOnYoutubeDBED)){
                   $youtubeDB->save();
                   //var_dump("my YOUTUBE".$youtubeDB->linkPlaylist."------------------------------------");
 
@@ -675,7 +695,8 @@ class LatlngController extends BaseController
               $group = $group+50;
 
 
-              }///end if chk vdo on youtube
+                }///end if chk vdo on youtube latlngStart
+             //// }///end if chk vdo on youtube latlngEnd
             }//for
           
         } 
@@ -710,32 +731,37 @@ class LatlngController extends BaseController
         $strKey='';
 
          for($z = 0; $z<$ll-1; $z++){
+
+          if(($z%10)==0){
              $startppP = str_replace(' ','',$array[$z]);
 
                 if($z==$numFirstoflastMkPlaylist){
                       $endppP =  str_replace(' ','',$array[$z+$NumtotalMkPlaylist]);
-                      $z+=$startppP+$NumtotalMkPlaylist;
-                      var_dump("++------------lastloop++");
-                      var_dump($startppP);
-                      var_dump("++endpoint++");
-                      var_dump($endppP);
+                     // $z+=$startppP+$NumtotalMkPlaylist;
+                     // var_dump("++------------lastloop++");
+                     // var_dump($startppP);
+                     // var_dump("++endpoint++");
+                     // var_dump($endppP);
                 }
 
                 else{
                       $endppP = str_replace(' ','',$array[$z+9]);
-                      $z+=9;
-                      var_dump("++another++");
-                      var_dump($startppP);
-                      var_dump("++endpoint++");
-                      var_dump($endppP);
+                     // $z+=9;
+                     // var_dump("++another++");
+                     // var_dump($startppP);
+                     // var_dump("++endpoint++");
+                     // var_dump($endppP);
                 }
 
 
               $findKEY = new search();
               $findKEYed = $findKEY->searchkeyFromYoutube($startppP,$endppP);
               $strKey.= $findKEYed;//concat get strkey
-              var_dump("KEYYYYYYYYYYYYY");
-             var_dump($findKEYed);
+             // var_dump("start->>".$startppP."end->>".$endppP);
+             // var_dump("KEYYYYYYYYYYYYY");
+             // var_dump($findKEYed);
+             // var_dump("-------------------------".$z."------------------------------");
+            }//end if check ten 
          }
 
           /**************************************************************************/
@@ -744,18 +770,15 @@ class LatlngController extends BaseController
 
          $arrayKey = str_split($strKey,11);
 
-         var_dump("+++++++++++++++++++++++++++++++ function to createPlaylist  ++++++++++++++++++++++++++++++++++++");
+        // var_dump("+++++++++++++++++++++++++++++++ function to createPlaylist  ++++++++++++++++++++++++++++++++++++");
 
-         var_dump($arrayKey);
+        // var_dump($arrayKey);
          $KTY=$this->createPlaylist($arrayKey,$objstart,$objend);
-          var_dump($KTY);
-          var_dump("After playlist");
+         // var_dump($KTY);
+        //  var_dump("After playlist");
 
         // return Redirect::to('/video');
           return View::make('video')->with(array('linkEmbed'=>$KTY,'start'=>Input::get('origin'),'end'=>Input::get('destination')));
-       
-
-
 
          
       }//close  else cover all process to upload then find vdo again

@@ -70,10 +70,8 @@ Route::get('/videoG', function()
     return View::make('videoG');
 });
 
-Route::get('/searchvideo', function()
-{
-    return View::make('searchVideo');
-});
+Route::get('searchvideo', 'searchVideoController@getsearchvideo');
+Route::post('searchvideo/result', 'searchVideoController@getserchresult');
 
 Route::get('/search','searchController@getcoor');
 //tete test//

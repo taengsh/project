@@ -112,8 +112,8 @@
 
 
 			public static function searchsubvdoByStEn($startL,$endL){
-			$data=SubLinkVDOEloquent::where('start','LIKE',"%".$startL."%");
-			$data=$data->where('end','LIKE',"%".$endL."%");
+			$data=SubLinkVDOEloquent::where('start','LIKE',$startL);
+			$data=$data->where('end','LIKE',$endL);
 			$data=$data->get();
 
 			$outputGroup=array();
@@ -129,7 +129,7 @@
 
 			public static function searchlinkVdobylinkVdoFromLinkVDO($namevdo){
 				//plese check latlng and heading
-			$data=SubLinkVDOEloquent::where('linkVDO','LIKE',"%".$namevdo."%")->get();
+			$data=SubLinkVDOEloquent::where('linkVDO','LIKE',$namevdo)->get();
 			$outputPic=array();
 			$size=count($data);
 					for ($a=0;$a<$size;$a++) {
@@ -159,7 +159,7 @@
 
 				/*** search picImage  search by namepic****/
 			public static function searchlatlngfrompicImage($picimg){
-			$data=picImageEloquent::where('picImage','LIKE',"%".$picimg."%")->get();
+			$data=picImageEloquent::where('picImage','LIKE',$picimg)->get();
 
 			$outputGroup=array();
 			$size=count($data);
@@ -288,6 +288,20 @@
 			return $outputPic;
 			}
 
+			public static function searchNameServbynameServe($nameserv){
+				//plese check latlng and heading
+			$data=playlistVDOEloquent::where('namevdoServ','LIKE',$nameserv)->get();
+			$outputPic=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputPic[$a]=$data[$a]->namevdoServ;
+				}
+				/**make array to string*/
+				$outputPic = implode($outputPic);
+				//var_dump($outputPic);
+			return $outputPic;
+			}
+				
 
 			public static function searchkeyFromYoutube($latS,$latE){
 			$data=playlistVDOEloquent::where('latlngStart','LIKE',"%".$latS."%");
@@ -296,7 +310,7 @@
 
 			$outputGroup=array();
 			$size=count($data);
-					for ($a=0;$a<$size;$a++) {
+					for ($a=0;$a<1;$a++) {
 						$outputGroup[$a]=$data[$a]->idLink;
 				}
 				$outputGroup = implode($outputGroup);
@@ -388,6 +402,61 @@
 
 
 
+
+			/************************************************************/
+			/***  special search 4 search prevent upload multiple path***/
+			
+			public static function searchStartPointServ($vdo){
+			$data=SubLinkVDOEloquent::where('linkVDO','LIKE',$vdo);
+			$data=$data->get();
+			$outputGroup=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputGroup[$a]=$data[$a]->latlngStart;
+				}
+				$outputGroup = implode($outputGroup);
+				//var_dump($outputGroup);
+			return $outputGroup;
+			}
+
+			public static function searchEndPointServ($vdo){
+			$data=SubLinkVDOEloquent::where('linkVDO','LIKE',$vdo);
+			$data=$data->get();
+			$outputGroup=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputGroup[$a]=$data[$a]->latlngEnd;
+				}
+				$outputGroup = implode($outputGroup);
+				//var_dump($outputGroup);
+			return $outputGroup;
+			}
+
+			public static function searchStartEndPointYoutube ($latStart){
+			$data=playlistVDOEloquent::where('latlngStart','LIKE',$latStart);
+			$data=$data->get();
+			$outputGroup=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputGroup[$a]=$data[$a]->latlngStart;
+				}
+				$outputGroup = implode($outputGroup);
+				//var_dump($outputGroup);
+			return $outputGroup;
+			}
+
+			public static function searchEndPointYoutube($latEnd){
+			$data=playlistVDOEloquent::where('latlngEnd','LIKE',$latEnd);
+			$data=$data->get();
+			$outputGroup=array();
+			$size=count($data);
+					for ($a=0;$a<$size;$a++) {
+						$outputGroup[$a]=$data[$a]->latlngEnd;
+				}
+				$outputGroup = implode($outputGroup);
+				//var_dump($outputGroup);
+			return $outputGroup;
+			}
 
 
 			

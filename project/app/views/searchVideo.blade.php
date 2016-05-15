@@ -25,9 +25,8 @@
         <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
     </head><!--/head-->
 
-    <body>
-              <header id="header">      
-
+<body>
+    <header id="header">      
         <div class="navbar navbar-inverse" role="banner">
             <div class="container">
                 <div class="navbar-header">
@@ -37,9 +36,6 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-
-                    
-                    
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
@@ -82,20 +78,32 @@
             </div>
         </div>
     </section>
+<br><br>
 
-    <div class="container-fluid">
-    <div class="container">
-      <div class = "col-md-4">
-             <input type="text" name="search" id="" class="form-control" placeholder="">
-       </div>
-      <div class = "col-md-4">
-            <a href="/project/public/videoG" class="btn btn-common">Search</a>
-       </div>
+<form action="{{url('searchvideo/result')}}" method="post" files="true" class="form-register" >
+<div class="container-fluid">
+        <div class="container">
+            <div class = "col-md-2">
+            </div>
+            <div class = "col-md-3">
+              <div class="form-group">
+                  <input id="origin" name="origin" type="text" class="form-control" placeholder="origin" value="">
+              </div>
+            </div>
+            <div class = "col-md-3">
+              <div class="form-group">
+                  <input id="destination" name="destination" type="text" class="form-control" placeholder="destination" value="">
+              </div>
+            </div>
+            <div class = "col-md-2">
+                 <input type="submit" class="btn btn-success btn-block btn-lg" value="Search">
+            </div>
+            <div class = "col-md-2">
+            </div>
         </div>
-    </div>
+</div>
+</form> 
 
-
-<!--/#page-breadcrumb-->
 
 <section id="blog" class="padding-bottom">
     <div class="container">
@@ -165,9 +173,7 @@
         </div>
     </div>
     
-</div>
-<div class="timeline-date text-center">
-    <a href="#" class="btn btn-common">See More</a>
+
 </div>
 </div>
 </div>

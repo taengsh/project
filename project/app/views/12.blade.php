@@ -230,9 +230,9 @@ function calcRoute() {
                               
                                 var li = document.createElement('li');
                                 li.innerHTML = getLiText(points[i]);
-                                ul.appendChild(li);
+                                //ul.appendChild(li);
 
-                               container.appendChild(document.createTextNode("Member " + (i)+1));
+                               //container.appendChild(document.createTextNode("Member " + (i)+1));
 
 
                             
@@ -254,7 +254,7 @@ function calcRoute() {
                                 headcal.name = "member1";
                                 headcal.id = "member1";  
                                 headcal.setAttribute('value',head);
-                                container.appendChild(headcal);
+                                //container.appendChild(headcal);
 
 
 
@@ -266,7 +266,7 @@ function calcRoute() {
                               //  input.setAttribute('value',points);
                                 input.setAttribute('value',points);
                                 //dd(pointAdd);
-                                container.appendChild(input);  
+                                //container.appendChild(input);  
                           
 
 

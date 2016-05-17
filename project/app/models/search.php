@@ -458,8 +458,75 @@
 			return $outputGroup;
 			}
 
+			/********************************make map move**********************************/
+			public static function searchStLat ($startPlace,$endPlace){
+			$data=latlngtestEloquent::where('start','LIKE',$startPlace);
+			$data=$data->where('end','LIKE',$endPlace);
+			$data=$data->get();
 
+			$outputStlat=array();
 			
+			$size=count($data);
+					for ($a=0;$a<1;$a++) {
+						$outputStlat[$a]=$data[$a]->startLat;
+				}
+				$outputStlat = implode($outputStlat);
+				
+				//var_dump($outputGroup);
+			return $outputStlat;
+			}
+
+			public static function searchStLng($startPlace,$endPlace){
+			$data=latlngtestEloquent::where('start','LIKE',$startPlace);
+			$data=$data->where('end','LIKE',$endPlace);
+			$data=$data->get();
+
+			$outputStlng=array();
+			$size=count($data);
+					for ($a=0;$a<1;$a++) {
+						
+						$outputStlng[$a]=$data[$a]->startLng;
+						}
+				$outputStlng = implode($outputStlng);
+				
+				//var_dump($outputGroup);
+			return $outputStlng;
+			}
+
+
+			public static function searchEnLat($startPlace,$endPlace){
+			$data=latlngtestEloquent::where('start','LIKE',$startPlace);
+			$data=$data->where('end','LIKE',$endPlace);
+			$data=$data->get();
+
+			$outputEnlat=array();
+			
+			$size=count($data);
+					for ($a=0;$a<1;$a++) {
+						$outputEnlat[$a]=$data[$a]->endLat;
+				}
+				$outputEnlat = implode($outputEnlat);
+				
+				//var_dump($outputGroup);
+			return $outputEnlat;
+			}
+			
+			public static function searchEnLng($startPlace,$endPlace){
+			$data=latlngtestEloquent::where('start','LIKE',$startPlace);
+			$data=$data->where('end','LIKE',$endPlace);
+			$data=$data->get();
+
+			$outputEnlng=array();
+			$size=count($data);
+					for ($a=0;$a<1;$a++) {
+						
+						$outputEnlng[$a]=$data[$a]->endLng;
+						}
+				$outputEnlng = implode($outputEnlng);
+				
+				//var_dump($outputGroup);
+			return $outputEnlng;
+			}
 
 
 

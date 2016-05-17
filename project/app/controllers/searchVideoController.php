@@ -41,7 +41,20 @@ class searchVideoController extends BaseController
           $stVideo = new searchVideo();
           $linkvideo = $stVideo->searchplaylistlinkembed($objstart,$objend);
 
-          return View::make('videoG')->with(array("link"=>$linkvideo,"start"=>$objstart,"end"=>$objend));
+          $StLat = new search();
+          $StLated = $StLat->searchStLat($objstart,$objend);
+
+          $StLng = new search();
+          $StLnged = $StLng->searchStLng($objstart,$objend);
+
+          $EnLat = new search();
+          $EnLated = $EnLat->searchEnLat($objstart,$objend);
+
+          $EnLng = new search();
+          $EnLngEd = $EnLng->searchEnLng($objstart,$objend);
+
+          return View::make('videoG')->with(array("link"=>$linkvideo,"start"=>$objstart,"end"=>$objend,
+            'Stlat'=>$StLated,'Stlng'=>$StLnged,'Enlat'=>$EnLated,'Enlng'=>$EnLngEd));
           
       }
 

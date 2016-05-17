@@ -74,7 +74,7 @@ class testyoutubeController extends BaseController
         // Check to ensure that the access token was successfully acquired.
     
         if ($client->getAccessToken()) {
-          for($a=1;$a<=4;$a++){
+          //for($a=1;$a<=4;$a++){
               $videoPath = "groupEfernAndpic4.avi";
               $title = "groupEfernAndpic4.avi";
               
@@ -163,7 +163,7 @@ class testyoutubeController extends BaseController
 
             $_SESSION['token'] = $client->getAccessToken();
               $group = $group+10;
-            }//for
+           // }//for
           
         } 
 

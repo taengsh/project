@@ -5,11 +5,10 @@
 		private $surname;
 		private $password;
 		private $email;	
-		private $start;	
-		private $end;	
-		private $userid;	
-		private $playlist;	
-	
+		private $status;
+		private $activate;
+
+
 		public function getid(){
 			return $this->id;
 		}
@@ -25,18 +24,13 @@
 		public function getemail(){
 			return $this->email;
 		}
-		public function getstart(){
-			return $this->start;
+		public function getstatus(){
+			return $this->status;
 		}
-		public function getend(){
-			return $this->end;
+		public function getactivate(){
+			return $this->activate;
 		}
-		public function getuserid(){
-			return $this->userid;
-		}
-		public function getplaylist(){
-			return $this->playlist;
-		}
+
 
 		public function setname($value){
 			$this->name=$value;
@@ -50,18 +44,13 @@
 		public function setemail($value){
 			$this->email=$value;
 		}
-		public function setstart($value){
-			$this->start=$value;
+		public function setstatus($value){
+			$this->status=$value;
 		}
-		public function setend($value){
-			$this->end=$value;
+		public function setactivate($value){
+			$this->activate=$value;
 		}
-		public function setuserid($value){
-			$this->userid=$value;
-		}
-		public function setplaylist($value){
-			$this->playlist=$value;
-		}
+
 
 		public function newUserlogin(){
 			$new=new UserLoginEloquent;
@@ -69,6 +58,8 @@
 			$new->surname=$this->surname;
 			$new->password=$this->password;
 			$new->email=$this->email;
+			$new->status="1";
+			$new->activate=$this->activate;
 			$new->save();
 		}
 
@@ -92,18 +83,34 @@
 		$obj->name=$data->name;
 		$obj->surname=$data->surname;
 		$obj->email=$data->email;
+		$obj->activate=$data->activate;
 
 		return $obj;
 		}
 
-		public function usersaveVDO(){
-			$new=new saveVideoEloquent;
-			$new->userid=$this->userid;
-			$new->start=$this->start;
-			$new->end=$this->end;
-			$new->playlist=$this->playlist;
-			$new->save();
+		public function editactivate($id,$act){
+			
+			$edit=UserLoginEloquent::find($id);
+			if($act=='0'){
+				$edit->activate='0';
+			}else{
+				$edit->activate='1';
+			}
+			
+			$edit->save();	
 		}
+
+		public static function getdatauser(){
+		$data=UserLoginEloquent::all();
+		//var_dump($data);
+		if($data==NULL){
+			return NULL;
+		}
+		return $data;
+		}
+
+
+
 
 	}	
 

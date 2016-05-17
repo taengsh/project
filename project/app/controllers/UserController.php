@@ -6,6 +6,18 @@ class UserController extends BaseController {
         return View::make('login');
     }
 
+    public function postsignin(){
+		$credentials=Input::only('email','password');
+		if(Auth::attempt($credentials)){
+			if(Auth::user()->status=='0'){
+				return Redirect::to('/admin');
+			}else{
+				return Redirect::to('/profile');
+			}
+		}
+		return Redirect::to('/login');
+	}
+
     public function getprofile(){
 		$obj=new Userlogin;
 		$user=$obj->getById(Auth::user()->id);
@@ -22,6 +34,9 @@ class UserController extends BaseController {
         return View::make('map');
     }
 
+    public function gethomeadmin(){
+    	return View::make('homeAdmin');
+    }
 
     public function getsaveVDO(){
 
@@ -37,6 +52,23 @@ class UserController extends BaseController {
 		//var_dump($vdoList);
 		$vdoList->usersaveVDO();
 		return Redirect::to('/profile');
+
+    }
+
+
+    public function getalluser(){
+    	$obj = new Userlogin;
+    	$users = $obj->getdatauser();
+    	return View::make('tableuser')->with(array('users'=>$users));
+
+    }
+
+    public function changeactivateuser(){
+    	$obj = new Userlogin;
+    	$id=Input::get('id');
+    	$act=Input::get('act');
+    	$users = $obj->editactivate($id,$act);
+    	// return View::make('tableuser')->with(array('users'=>$users));
 
     }
  

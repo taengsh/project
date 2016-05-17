@@ -30,13 +30,12 @@ Route::post('register/create', 'RegisterController@registerCreate');
 
 //signin
 Route::get('/login','UserController@getsignin');
-Route::post('/login',function(){
-	$credentials=Input::only('email','password');
-	if(Auth::attempt($credentials)){
-		return Redirect::intended('/profile');
-	}
-	return Redirect::to('/login');
-});
+Route::post('/login','UserController@postsignin');
+
+Route::get('/admin','UserController@gethomeadmin');
+
+Route::get('/user','UserController@getalluser');
+Route::post('/update','UserController@changeactivateuser');
 
 //signout
 Route::get('/signout',function(){
@@ -108,4 +107,15 @@ Route::get('testplaylist','testyoutubeController@createPlaylist');
 Route::get('/map1', function()
 {
     return View::make('mapviews');
+});
+
+Route::get('/eieimove', function()
+{
+    return View::make('tetenurse22');
+});
+
+
+Route::get('/eiei', function()
+{
+    return View::make('tetenurse');
 });

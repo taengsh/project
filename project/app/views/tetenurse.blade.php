@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
+    <title>Geocoding service</title>
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Routing Map</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/prettyPhoto.css" rel="stylesheet"> 
@@ -18,16 +18,40 @@
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
         <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
     <style>
-      html, body, #map-canvas { height: 100%; min-height: 300px; min-width: 300px; margin: 0px; padding: 0px }
-      #map-canvas { height: 450px; width: 700px; }
-      #panel { position: absolute; top: 5px; left: 50%; margin-left: -180px; z-index: 5; background-color: #fff; padding: 5px; border: 1px solid #999; }
+    html, body, #map-canvas { height: 100%; min-height: 300px; min-width: 300px; margin: 0 auto; padding: 0px }
+    #map-canvas { height: 450px; width: 550px; }
+
+     /* The alert message box */
+    .alert {
+    padding: 15px;
+    background-color: #FF9966; /* Red */
+    color: white;
+    margin-bottom: 15px;
+    }
+
+/* The close button */
+    .closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 30px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    }
+
+/* When moving the mouse over the close button */
+    .closebtn:hover {
+    color: black;
+    }
+    
     </style>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+   <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script> 
+    
 </head>
-
 <body>
-        <header id="header">      
-
+  <header id="header">      
         <div class="navbar navbar-inverse" role="banner">
             <div class="container">
                 <div class="navbar-header">
@@ -37,9 +61,6 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-
-                    
-                    
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
@@ -49,7 +70,7 @@
                                 @if(Auth::guest())
                                     <li><a href="/project/public/map">Direction</a></li>
                                     @else
-                                    <li><a href="/project/public/maproute">Direction</a></li>
+                                    <li><a href="/project/public/searchmap">Direction</a></li>
                                     @endif  
                                 <li><a href="/project/public/searchvideo">Video</a></li>
                             </ul>
@@ -64,20 +85,11 @@
                         @endif                 
                     </ul>
                 </div>
-                <div class="search">
-                    <form role="form">
-                        <i class="fa fa-search"></i>
-                        <div class="field-toggle">
-                            <input type="text" class="search-form" autocomplete="off" placeholder="Search">
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
     </header>
-    <!--/#header-->
 
-        <section id="page-breadcrumb">
+    <section id="page-breadcrumb">
             <div class="vertical-center sun">
                <div class="container">
                 <div class="row">
@@ -86,64 +98,92 @@
                             <h1 class="title">Direction...</h1>
                         </div>          
                     </div>
-                </div>
-            </div>
-        </div>
+                </div> 
+                  <div class="alert">
+                      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                      This is an alert box.
+                  </div>
+            </div>      
+        </div>   
     </section>
+    <br><br>
+    <form action="{{url('searchmap/direction')}}" method="post" files="true" class="form-register" id="formRoute">
+          <div id="container">
+          </div>
+          <div class = "col-md-1">
+          </div>
+          <div class = "col-md-5">
+                  <div id="map-canvas"></div>
+                  <div id="vertex-container">
+                    <ul type="text" name="vertex" id="vertex" class="form-control input-sm" value="" ></ul>
+                  </div>
+          </div>
 
-    <div class="container-fluid">
+          <div class = "col-md-4">
+            <div class="panel"><center>
+                <label>Origin
+                  <input type="text" name="origin" id="origin" class="form-control input-sm" value="">
+                </label>&nbsp&nbsp&nbsp&nbsp
+                <label>Destination
+                  <input type="text" name="destination" id="destination" class="form-control input-sm" value="">
+               </label>
+               <label>Create&nbsp&nbspVideo&nbsp&nbsp:&nbsp&nbsp
+                  <input type="button" value="Video" class="btn btn-success" onclick="calcRoute()">
+               </label>    
+          </div></center>
+    </form> 
+          <center><label>Create&nbsp&nbspRoute&nbsp&nbsp:&nbsp&nbsp 
+                  <input type="button" value="Route" class="btn btn-primary" onclick="calcRoute1()">
+          </label></center>   
 
-        <div class="container">
-            <br><br><br>
-                <div class = "col-md-8">
-                    <div id="map-canvas"></div>
-                </div>
-            <form action = "{{url('aa/direction')}}" method="post" files="true" class="form-register" id="formRoute">
-                <div class = "col-md-4">
-                    <br><br><br><br><br>
-                    <div class = "col-md-4"> ต้นทาง : </div>
-                    <div class = "col-md-8"> 
-                        <div class="form-group">
-                                <input id="origin" name="origin" type="text" class="form-control" placeholder="origin" value="">
-                        </div>
-                    </div>
-                    <div class = "col-md-4"> ปลายทาง : </div>
-                    <div class = "col-md-8">
-                        <div class="form-group">
-                              <input id="destination" name="destination" type="text" class="form-control" placeholder="destination" value="">
-                        </div>
-                    </div>
-                        <div class = "col-md-8">
-                            <input type="submit" class="btn btn-info btn-block btn-lg" value="createVideo" onclick="RouteVDO()">
-                        </div>
-                </div>
-            </form> 
-            <button class="btn btn-info btn-lg" onclick="calcRoute()">Create Route</button>
+
+
+  <!--<form action="{{url('aa/direction')}}" method="post" files="true" class="form-register" id="formRoute">
+        <div id="container">
         </div>
-    </div>
-       
+        <div id="panel"><center>
+          <label>Origin
+            <input type="text" name="origin" id="origin" class="form-control input-sm" value="">
+          </label>
+          <label>Destination
+            <input type="text" name="destination" id="destination" class="form-control input-sm" value="">
+         </label>
+            <input type="button" value="Create"  onclick="calcRoute()">
+      </div></center>
+  <br><br><br>
+  <div id="map-canvas"></div>
+  <div id="vertex-container">
+    <ul type="text" name="vertex" id="vertex" class="form-control input-sm" value="" >
+    </ul>
+</div>
+</form> 
+<input type="button" value="Create Route"  onclick="calcRoute1()">-->
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=geometry"></script>
+<script type="text/javascript">
+var directionsDisplay;
+var directionsService = new google.maps.DirectionsService();
+var map;
+//var mycenter = new google.maps.LatLng(13.72148, 100.79151);
+var bear,invBear;
+var head="";
+var mapOptions;
 
-    <script type="text/javascript">
-        var directionsDisplay;
-        var directionsService = new google.maps.DirectionsService();
-        var map;
-        var bear,invBear;
-        var head="";
-        var mapOptions;
 
 
-        function initialize() {
-            directionsDisplay = new google.maps.DirectionsRenderer();
+function initialize() {
+    directionsDisplay = new google.maps.DirectionsRenderer();
 
-            var mapOptions = {
-                zoom: 7,
-                center: new google.maps.LatLng(13.72148, 100.79151)
-            };
-            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-            directionsDisplay.setMap(map);
-        }
+    var mapOptions = {
+        zoom: 9,
+        center: new google.maps.LatLng(13.72148, 100.79151)
+    };
+   
 
-        function calcRoute() {
+    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    directionsDisplay.setMap(map);
+}
+
+function calcRoute1() {
             var start = document.getElementById('origin').value;
             var end = document.getElementById('destination').value;
             var request = {
@@ -151,6 +191,12 @@
                 destination: end,
                 travelMode: google.maps.TravelMode.DRIVING
             };
+
+           // var p1 = new google.maps.LatLng(13.721910000000001, 100.77520000000001);
+          //  var p2 = new google.maps.LatLng(13.72802, 100.74864000000001);
+           // alert(calcDistance(p1, p2));
+            //infowindow.setContent(Start); 
+
             directionsService.route(request, function (response, status) {
                 if (status == google.maps.DirectionsStatus.OK) {
                      var warnings = document.getElementById("warnings_panel");
@@ -159,31 +205,52 @@
                     directionsDisplay.setDirections(response);
                     if (response.routes && response.routes.length > 0) {
                         var routes = response.routes;
-                       // alert(routes.length);
+                        //alert(routes.length);
                         for (var j = 0; j < routes.length; j++) {
                             var points = routes[j].overview_path;
+                            var sizeArr = points.length;
+
+
+                              var p1 = new google.maps.LatLng(points[0].lat(),points[0].lng());
+                              var p2 = new google.maps.LatLng(points[sizeArr-1].lat(),points[sizeArr-1].lng());
+
+                            alert("Distance : "+calcDistance(p1, p2)+" Km");
+
+                            if((calcDistance(p1, p2))>10){
+                                 alert("Distance over 10 Km your distance is "+calcDistance(p1, p2)+" Km");
+
+                            }
+
                             //j=j/4;
                             var ul = document.getElementById("vertex");
+
+                       
+
                             //alert(points.length);//half of prin to screen
-                            for (var i = 0; i < points.length; i++) {
-                                var li = document.createElement('li');
-                                li.innerHTML = getLiText(points[i]);
-                                ul.appendChild(li);
+                            //for (var i = 0; i < points.length; i++) {
+                             //   var li = document.createElement('li');
+                            //    li.innerHTML = getLiText(points[i]);
+                            //    ul.appendChild(li);
 //alert(points[i]);
-                            }
+                           // }
+
                         }
                     }
                 }
             });
         }
 
-        /********************************************************/
-        /**            CLICK createVDO                         **/
-        /********************************************************/
+function myFunction() {
+    var person = prompt("Please enter your name", "Harry Potter");
+    
+    if (person != null) {
+        document.getElementById("demo").innerHTML =
+        "Hello " + person + "! How are you today?";
+    }
+}
 
-function RouteVDO() {
+function calcRoute() {
 
-   
     var start = document.getElementById('origin').value;
     var end = document.getElementById('destination').value;
     var request = {
@@ -191,6 +258,8 @@ function RouteVDO() {
         destination: end,
         travelMode: google.maps.TravelMode.DRIVING
     }; 
+
+
   
 
     directionsService.route(request, function (response, status) {   
@@ -202,7 +271,7 @@ function RouteVDO() {
                      directionsDisplay.setDirections(response);
                      if (response.routes && response.routes.length > 0) {
                         var routes = response.routes; 
-                        alert("Have route"); 
+                        alert("Have Route in this Map"); 
 
                         for (var j = 0; j < routes.length; j++) {
                             var points = routes[j].overview_path;
@@ -217,9 +286,9 @@ function RouteVDO() {
                               
                                 var li = document.createElement('li');
                                 li.innerHTML = getLiText(points[i]);
-                                ul.appendChild(li);
+                                //ul.appendChild(li);
 
-                               container.appendChild(document.createTextNode("Member " + (i)+1));
+                               //container.appendChild(document.createTextNode("Member " + (i)+1));
 
 
                             
@@ -260,11 +329,6 @@ function RouteVDO() {
                         }//end for route length
                         
                     }//end if response.routes
-
-                    else{
-                        alert("Sorry not have");
-
-                    }
                    
                
         } //end if status
@@ -306,24 +370,12 @@ function bearling(lat,lng,nlat,nlng){
       if (bear<180) return bear+180;
       else return bear-180;
     }
+function calcDistance(p1, p2) {
+  return (google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000).toFixed(2);
+}
 
 google.maps.event.addDomListener(window, 'load', initialize);
-</script> 
+</script>
 
-<footer id="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12 text-center bottom-separator">
-                <img src="images/home/under.png" class="img-responsive inline" alt="">
-            </div>
-        </div>
-    </div>
-</footer>
-    <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/gmaps.js"></script>
-    <script type="text/javascript" src="js/wow.min.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
 </body>
-
 </html>

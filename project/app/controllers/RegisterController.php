@@ -36,6 +36,8 @@ class RegisterController extends BaseController
             $addUser->surname       = Input::get('surname');
             $addUser->password      = Hash::make(Input::get('password'));
             $addUser->email         = Input::get('email');
+            $addUser->status        = "1";
+            $addUser->activate      = "0";
             $addUser->create_at     = date("Y-m-d H:i:s",time());
             $addUser->save();
              

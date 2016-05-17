@@ -147,7 +147,7 @@ class LatlngController extends BaseController
       //$out3 = implode("", $out3);
 
      /////// //echo json_encode(array($out,$out2,$out3));
-       echo json_encode(array($out3));
+      // echo json_encode(array($out3));
 
        $findBigvdo = new search();
        $findBigvdoED = $findBigvdo->searchBigPlaylistkey($playlistId);
@@ -167,6 +167,18 @@ class LatlngController extends BaseController
 
     public function getdirection()
     {
+
+          $obj = new Userlogin;
+          $user = $obj->getById(Auth::user()->id);
+          $idActiv=$user->getactivate();
+
+          if($idActiv==0){//not allow permission from admin
+          echo "<a href='".'http://network01.ce.kmitl.ac.th:8002/project/public/home'."'>Please wait authorize access from admin</a>";
+          //return Redirect::to('/home');
+          }
+          else{
+
+
           session_start();
           $objstart = Input::get('origin');
           $objend = Input::get('destination');
@@ -187,6 +199,10 @@ class LatlngController extends BaseController
           $addLatlng ->end     = $objend;
           $addLatlng ->headingAll    = Input::get('member1');
           $addLatlng ->coordinate    = Input::get('member');
+
+          
+          
+          $addLatlng ->userid = $user;
 
 
 
@@ -246,7 +262,21 @@ class LatlngController extends BaseController
         /*********************************************************************************/
           $findvdoFirsttime = new search();
           $findvdoFirsttimeED=$findvdoFirsttime->searchBigPlaylist($objstart,$objend);
-        return View::make('video')->with(array('linkEmbed'=>$findvdoFirsttimeED,'start'=>Input::get('origin'),'end'=>Input::get('destination')));
+
+          $StLat = new search();
+          $StLated = $StLat->searchStLat($objstart,$objend);
+
+          $StLng = new search();
+          $StLnged = $StLng->searchStLng($objstart,$objend);
+
+          $EnLat = new search();
+          $EnLated = $EnLat->searchEnLat($objstart,$objend);
+
+          $EnLng = new search();
+          $EnLngEd = $EnLng->searchEnLng($objstart,$objend);
+
+        return View::make('video')->with(array('linkEmbed'=>$findvdoFirsttimeED,'start'=>Input::get('origin'),'end'=>Input::get('destination'),
+          'Stlat'=>$StLated,'Stlng'=>$StLnged,'Enlat'=>$EnLated,'Enlng'=>$EnLngEd,'boxx'=>$strsearchlatlng ));
            
           }
 
@@ -256,7 +286,7 @@ class LatlngController extends BaseController
           
           if (strcmp($namelatlng,$nameStEn)){// if not have route in latlng  if (strcmp($namelatlng,$nameStEn))
               
-                 var_dump("save eiei");
+                 //var_dump("save eiei");
                  $addLatlng->save();//SAVE new latlng
                 
           }
@@ -270,13 +300,33 @@ class LatlngController extends BaseController
               $arrayh[$i]= $arrayh[$i+1]; //NULL at first heading must move 
                  if($i==0){
                           $array[$i]= substr($array[$i],1);
-                          //var_dump($array[$i]);
+                          //save latlngtest too
+                          $lattest= new latlngtestEloquent();
+                          $lattest->start=$objstart;
+                          $lattest->end=$objend;
+
+                          $latlngstarttest = str_replace(' ','',$array[0]);
+                          $temp = explode(',',$latlngstarttest);
+
+                          $lattest->startLat=$temp[0];
+                          $lattest->startLng=$temp[1];
+
+                          $latlngEndtest = str_replace(' ','',$array[$ll-1]);
+                          $temp2 = explode(',',$latlngEndtest);
+
+                          $lattest->endLat=$temp2[0];
+                          $lattest->endLng=$temp2[1];
+                          
+                          $lattest->save();
+
                   }
 
                   if ($i==$ll-1) {
                           $array[$i]= trim($array[$i],")"); 
                           //var_dump($array[$i]);
                   }
+
+
         
         
             /**addpic to database**/
@@ -430,7 +480,7 @@ class LatlngController extends BaseController
             $NumStart = 0;
             $Numtotal = ($ll-2)%10;
 
-             $numFirstoflastGroup = ($ll-(($ll-1)%10))-1;//90
+            $numFirstoflastGroup = ($ll-(($ll-1)%10))-1;//90
             $numLastoflastGroup = $ll;
          
             for( $j=0 ; $j<$Numround ; $j++ ){
@@ -481,6 +531,9 @@ class LatlngController extends BaseController
         }//end make VDO   for( $j=0 ; $j<$ll-1 ; $j++ )
 
 
+      
+  
+
         /****************************************************/
         /**                    MAKE YOUTUBE               ***/
         /****************************************************/
@@ -513,14 +566,14 @@ class LatlngController extends BaseController
 
         if (isset($_GET['code'])) {
               if (strval($_SESSION['state']) !== strval($_GET['state'])) {
-                var_dump("////session state////"); var_dump($_SESSION['state']); 
-                var_dump("////state////");var_dump($_GET['state']); 
+                //var_dump("////session state////"); var_dump($_SESSION['state']); 
+               // var_dump("////state////");var_dump($_GET['state']); 
                 die('The session state did not match.');
             }
             $client->authenticate($_GET['code']);
             $_SESSION['token'] = $client->getAccessToken();
             header('Location: ' . $redirect);
-            var_dump("////token////"); var_dump($_SESSION['token']);
+            //var_dump("////token////"); var_dump($_SESSION['token']);
             header('Location: ' . $redirect);
         }
 
@@ -732,30 +785,19 @@ class LatlngController extends BaseController
 
                 if($z==$numFirstoflastMkPlaylist){
                       $endppP =  str_replace(' ','',$array[$z+$NumtotalMkPlaylist]);
-                     // $z+=$startppP+$NumtotalMkPlaylist;
-                     // var_dump("++------------lastloop++");
-                     // var_dump($startppP);
-                     // var_dump("++endpoint++");
-                     // var_dump($endppP);
+              
                 }
 
                 else{
                       $endppP = str_replace(' ','',$array[$z+9]);
-                     // $z+=9;
-                     // var_dump("++another++");
-                     // var_dump($startppP);
-                     // var_dump("++endpoint++");
-                     // var_dump($endppP);
+                 
                 }
 
 
               $findKEY = new search();
               $findKEYed = $findKEY->searchkeyFromYoutube($startppP,$endppP);
               $strKey.= $findKEYed;//concat get strkey
-             // var_dump("start->>".$startppP."end->>".$endppP);
-             // var_dump("KEYYYYYYYYYYYYY");
-             // var_dump($findKEYed);
-             // var_dump("-------------------------".$z."------------------------------");
+             
             }//end if check ten 
          }
 
@@ -773,13 +815,28 @@ class LatlngController extends BaseController
         //  var_dump("After playlist");
 
         // return Redirect::to('/video');
-          return View::make('video')->with(array('linkEmbed'=>$KTY,'start'=>Input::get('origin'),'end'=>Input::get('destination')));
+
+          $StLat2 = new search();
+          $StLated2 = $StLat2->searchStLat($objstart,$objend);
+
+          $StLng2 = new search();
+          $StLnged2 = $StLng2->searchStLng($objstart,$objend);
+
+          $EnLat2 = new search();
+          $EnLated2 = $EnLat2->searchEnLat($objstart,$objend);
+
+          $EnLng2 = new search();
+          $EnLngEd2 = $EnLng2->searchEnLng($objstart,$objend);
+
+
+          return View::make('video')->with(array('linkEmbed'=>$KTY,'start'=>Input::get('origin'),'end'=>Input::get('destination'),
+            'Stlat'=>$StLated2,'Stlng'=>$StLnged2,'Enlat'=>$EnLated2,'Enlng'=>$EnLngEd2,'boxx'=>$strsearchlatlng ));
 
          
-      }//close  else cover all process to upload then find vdo again
+      }//close  else cover all process to upload then find vdo to create playlist again
 
 
-
+    }//close else Active 
 
     }//end fn getdirection()
 

@@ -58,6 +58,19 @@ return array(
 	|
 	*/
 
+	'multi' => array(
+        'admin' => array(
+            'driver' => 'database',
+            'model'  => 'UserLoginEloquent',
+            'table'  => 'admins'
+        ),
+        'user' => array(
+            'driver' => 'eloquent',
+            'model'  => 'UserLoginEloquent',
+            'table'  => 'tbl_user'
+        )
+    ),
+
 	'reminder' => array(
 
 		'email' => 'emails.auth.reminder',

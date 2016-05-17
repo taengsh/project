@@ -50,7 +50,7 @@
                                     <li><a href="/project/public/map">Direction</a></li>
                                     @else
                                     <li><a href="/project/public/searchmap">Direction</a></li>
-                                    @endif  
+                                @endif  
                                 <li><a href="/project/public/searchvideo">Video</a></li>
                             </ul>
                         </li>                    

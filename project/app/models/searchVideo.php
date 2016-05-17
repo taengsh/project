@@ -36,7 +36,7 @@
 			public static function searchmaxid(){
 
 			$maxid = 0;
-			$minid = 1;
+			$minid = 17;
 			$row = vdoEloquent::orderBy('id','desc')->limit(1)->get();
 			if ($row) {
 			    $maxid = $row[0]->id; 

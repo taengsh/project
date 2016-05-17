@@ -20,6 +20,31 @@
     <style>
     html, body, #map-canvas { height: 100%; min-height: 300px; min-width: 300px; margin: 0 auto; padding: 0px }
     #map-canvas { height: 450px; width: 550px; }
+
+     /* The alert message box */
+    .alert {
+    padding: 15px;
+    background-color: #FF9966; /* Red */
+    color: white;
+    margin-bottom: 15px;
+    }
+
+/* The close button */
+    .closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 30px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    }
+
+/* When moving the mouse over the close button */
+    .closebtn:hover {
+    color: black;
+    }
     
     </style>
    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script> 
@@ -73,9 +98,13 @@
                             <h1 class="title">Direction...</h1>
                         </div>          
                     </div>
-                </div>
-            </div>
-        </div>
+                </div> 
+                  <div class="alert">
+                      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                      Please check route before make VDO (if distance over 10 Km. we will not allow to make VDO.)
+                  </div>
+            </div>      
+        </div>   
     </section>
     <br><br>
     <form action="{{url('searchmap/direction')}}" method="post" files="true" class="form-register" id="formRoute">
@@ -168,18 +197,29 @@ function calcRoute1() {
                     directionsDisplay.setDirections(response);
                     if (response.routes && response.routes.length > 0) {
                         var routes = response.routes;
-                        alert(routes.length);
+                        //alert(routes.length);
                         for (var j = 0; j < routes.length; j++) {
                             var points = routes[j].overview_path;
-                            //j=j/4;
+
+                           
+                            var sizeArr = points.length;
+                            var p1 = new google.maps.LatLng(points[0].lat(),points[0].lng());
+                            var p2 = new google.maps.LatLng(points[sizeArr-1].lat(),points[sizeArr-1].lng());
+
+                            alert("Distance : "+calcDistance(p1, p2)+" Km");
+
+                            if((calcDistance(p1, p2))>10){
+                                 alert("Distance over 10 Km your distance is "+calcDistance(p1, p2)+" Km");
+                            }
+                           
                             var ul = document.getElementById("vertex");
                             //alert(points.length);//half of prin to screen
-                            for (var i = 0; i < points.length; i++) {
-                                var li = document.createElement('li');
-                                li.innerHTML = getLiText(points[i]);
-                                ul.appendChild(li);
-//alert(points[i]);
-                            }
+                            //for (var i = 0; i < points.length; i++) {
+                             //   var li = document.createElement('li');
+                            //    li.innerHTML = getLiText(points[i]);
+                            //    ul.appendChild(li);
+                            //alert(points[i]);
+                           // }
                         }
                     }
                 }
@@ -215,11 +255,20 @@ function calcRoute() {
                      directionsDisplay.setDirections(response);
                      if (response.routes && response.routes.length > 0) {
                         var routes = response.routes; 
-                        alert("yes"); 
+                        //alert("Have Route in this Map"); 
 
                         for (var j = 0; j < routes.length; j++) {
                             var points = routes[j].overview_path;
-                              
+                            
+                            var sizeArr = points.length;
+                            var p1 = new google.maps.LatLng(points[0].lat(),points[0].lng());
+                            var p2 = new google.maps.LatLng(points[sizeArr-1].lat(),points[sizeArr-1].lng());
+
+                            alert("Distance : "+calcDistance(p1, p2)+" Km");
+
+                            if((calcDistance(p1, p2))>10){
+                                 alert("Distance over 10 Km your distance is "+calcDistance(p1, p2)+" Km");
+                            }
                                
                             //j=j/4;
                             var ul = document.getElementById("vertex");
@@ -230,12 +279,10 @@ function calcRoute() {
                               
                                 var li = document.createElement('li');
                                 li.innerHTML = getLiText(points[i]);
+
                                 //ul.appendChild(li);
-
                                //container.appendChild(document.createTextNode("Member " + (i)+1));
-
-
-                            
+                      
                               if(points[i+1]!=null){
                                   //  var pointAdd =setdelta(points[i].lat(),points[i].lng(),points[i+1].lat(),points[i+1].lng());
 
@@ -314,6 +361,10 @@ function bearling(lat,lng,nlat,nlng){
       if (bear<180) return bear+180;
       else return bear-180;
     }
+
+function calcDistance(p1, p2) {
+  return (google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000).toFixed(2);
+}
 
 google.maps.event.addDomListener(window, 'load', initialize);
 </script>
